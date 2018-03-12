@@ -5,7 +5,7 @@ import com.daoshengwanwu.math_util.calculator.exception.*;
 import com.daoshengwanwu.math_util.calculator.util.DigitUtil;
 
 
-class Variable extends ExpItem {
+public class Variable extends ExpItem {
     private String mFlagStr;
     private double mUpperLimit;
     private double mLowerLimit;
@@ -76,6 +76,16 @@ class Variable extends ExpItem {
     public double curValue() {
         return mCurValue;
     }//curValue
+
+    public int size() {
+        int size = (int)((mUpperLimit - mLowerLimit) / mSpan) + 1;
+
+        if ((mUpperLimit - mLowerLimit) % mSpan != 0) {
+            size++;
+        }
+
+        return size;
+    }
 
     @Override
     public String toString() {

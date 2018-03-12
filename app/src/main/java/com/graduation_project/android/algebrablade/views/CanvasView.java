@@ -8,10 +8,16 @@ import android.graphics.Point;
 import android.graphics.Rect;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.util.SparseArray;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
+
+import com.daoshengwanwu.math_util.calculator.Calculator;
+import com.daoshengwanwu.math_util.calculator.VarAriExp;
+import com.daoshengwanwu.math_util.calculator.Variable;
+import com.daoshengwanwu.math_util.calculator.VariableAssistant;
 
 
 public class CanvasView extends View {
@@ -23,6 +29,8 @@ public class CanvasView extends View {
     private static final int INDEX_SIZE = 30; //坐标轴下标的文字大小
     private static final int INDEX_COLOR = 0Xff000000; //坐标轴下标的颜色
     private static final int INDEX_MARGIN = 12; //坐标轴下标与坐标轴的距离
+    private static final int CURVE_WIDTH = 3; //曲线宽度
+    private static final int CURVE_COLOR = 0xff00ffff; //曲线颜色
 
     private int mCurWidth = -1; //当前View的宽度
     private int mCurHeight = -1; //当前View的高度
@@ -36,6 +44,13 @@ public class CanvasView extends View {
     private GestureDetector mGestureDetector;
     private ScaleGestureDetector mScaleGestureDetector;
 
+    private SparseArray<float[]> mCurves = new SparseArray<>();
+    private OnDomainChangeListener mOnDomainChangeListener;
+
+    private Calculator mCalculator = new Calculator();
+    private VarAriExp mExpression;
+    private VariableAssistant mVariableAssistant = new VariableAssistant();
+
 
     public CanvasView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
@@ -45,8 +60,23 @@ public class CanvasView extends View {
 
             @Override
             public boolean onScroll(MotionEvent motionEvent, MotionEvent motionEvent1, float v, float v1) {
+                float preDomainStart = getCurrentDomainStart();
+                float preDomainEnd = getCurrentDomainEnd();
+
                 mOriginPoint.x -= v;
                 mOriginPoint.y += v1;
+
+                if (mOnDomainChangeListener != null) {
+                    mOnDomainChangeListener.onDomainChange(
+                            CanvasView.this,
+                            preDomainStart,
+                            preDomainEnd,
+                            getCurrentDomainStart(),
+                            getCurrentDomainEnd(),
+                            mCurves
+                    );
+                }
+
                 invalidate();
                 return false;
             }
@@ -61,6 +91,26 @@ public class CanvasView extends View {
                 return false;
             }
         });
+
+        setOnDomainChangeListener(new OnDomainChangeListener() {
+            @Override
+            public void onDomainChange(CanvasView view, float preStart, float preEnd,
+                                       float start, float end, SparseArray<float[]> curves) {
+                addTestLine(start, end, view);
+            }
+        });
+    }
+
+    public void addLine(int key, float[] points) {
+        mCurves.put(key, points);
+    }
+
+    public void clearLines() {
+        mCurves.clear();
+    }
+
+    public void setOnDomainChangeListener(OnDomainChangeListener listener) {
+        mOnDomainChangeListener = listener;
     }
 
     @Override
@@ -80,6 +130,8 @@ public class CanvasView extends View {
                 mCurHeight < 2 * AXIS_MARGIN + 1) {
             throw new RuntimeException("组件尺寸过小，请保证长宽均大于" + (2 * AXIS_MARGIN + 1));
         }
+
+        addTestLine(getCurrentDomainStart(), getCurrentDomainEnd(), this);
     }
 
     @Override
@@ -87,6 +139,7 @@ public class CanvasView extends View {
         super.onDraw(canvas);
         adjustCanvas(canvas);
         drawCoordinate(canvas);
+        drawCurves(canvas);
     }
 
     /**
@@ -202,5 +255,84 @@ public class CanvasView extends View {
 
         canvas.drawLine(xCoordinateOfYAxis, mCurHeight / 2,
                 xCoordinateOfYAxis, mCurHeight / 2 - mCurHeight, mPaint);
+    }
+
+    /**
+     * 将mCurves里的曲线绘制出来
+     */
+    private void drawCurves(Canvas canvas) {
+        mPaint.reset();
+        mPaint.setStyle(Paint.Style.STROKE);
+        mPaint.setColor(CURVE_COLOR);
+        mPaint.setStrokeWidth(CURVE_WIDTH);
+
+        for (int i = 0; i < mCurves.size(); i++) {
+            float[] points = mCurves.valueAt(i);
+
+            if (points.length < 4 || points.length % 2 != 0) {
+                continue;
+            }
+
+            float preX = points[0];
+            float preY = points[1];
+            for (int j = 2; j < points.length; j += 2) {
+                canvas.drawLine(
+                        logicXCoordinate2CanvasXCoordinate(preX),
+                        logicYCoordinate2CanvasYCoordinate(preY),
+                        logicXCoordinate2CanvasXCoordinate(points[j]),
+                        logicYCoordinate2CanvasYCoordinate(points[j + 1]),
+                        mPaint);
+
+                preX = points[j];
+                preY = points[j + 1];
+            }
+        }
+    }
+
+    private int logicXCoordinate2CanvasXCoordinate(double logicXCoordinate) {
+        int logicPixelXCoordinate = (int)(logicXCoordinate / mUnitOfLattice * mPixelOfLattice);
+        return logicPixelXCoordinate + mOriginPoint.x;
+    }
+
+    private int logicYCoordinate2CanvasYCoordinate(double logicYCoordinate) {
+        int logicPixelYCoordinate = (int)(logicYCoordinate / mUnitOfLattice * mPixelOfLattice);
+        return logicPixelYCoordinate + mOriginPoint.y;
+    }
+
+    private float getCurrentDomainStart() {
+        return (-mCurWidth / 2 - mOriginPoint.x) / (float)mPixelOfLattice * mUnitOfLattice;
+    }
+
+    private float getCurrentDomainEnd() {
+        return (mCurWidth - mCurWidth / 2 - mOriginPoint.x) / (float)mPixelOfLattice * mUnitOfLattice;
+    }
+
+
+    public interface OnDomainChangeListener {
+        void onDomainChange(CanvasView view, float preStart, float preEnd,
+                            float start, float end, SparseArray<float[]> curves);
+    }
+
+    private void addTestLine(float start, float end, CanvasView view) {
+        mVariableAssistant.clear();
+        mVariableAssistant.addVariable("x", start, false,
+                end, false, 0.1);
+        mExpression = new VarAriExp("sin(x) + |x|", mVariableAssistant);
+        Calculator.ResultGenerator rst = mCalculator.calculate(mExpression);
+
+        int i = 0;
+        Variable var = mVariableAssistant.getVariable("x");
+        float[] points = new float[2 * var.size()];
+
+        points[i++] = (float)var.curValue();
+        points[i++] = (float)rst.curValue();
+        while (var.hasNext()) {
+            points[i] = (float)var.nextValue();
+            points[i + 1] = (float)rst.curValue();
+
+            i += 2;
+        }
+        view.clearLines();
+        view.addLine(0, points);
     }
 }

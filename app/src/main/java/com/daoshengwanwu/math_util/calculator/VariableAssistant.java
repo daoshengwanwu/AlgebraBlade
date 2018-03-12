@@ -68,4 +68,8 @@ public class VariableAssistant {
 
         throw new VarAssistHasNoNextValueException();
     }//nextValue
+
+    public void clear() {
+        mVariablesMap.clear();
+    }//clear
 }//class_VariableAssistant
