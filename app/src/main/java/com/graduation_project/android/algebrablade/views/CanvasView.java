@@ -8,7 +8,9 @@ import android.graphics.Point;
 import android.graphics.Rect;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.view.GestureDetector;
 import android.view.MotionEvent;
+import android.view.ScaleGestureDetector;
 import android.view.View;
 
 
@@ -31,14 +33,41 @@ public class CanvasView extends View {
     private Paint mPaint = new Paint();
     private Rect mTextBounds = new Rect();
 
+    private GestureDetector mGestureDetector;
+    private ScaleGestureDetector mScaleGestureDetector;
+
 
     public CanvasView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
+
+        mGestureDetector = new GestureDetector(context,
+                new GestureDetector.SimpleOnGestureListener() {
+
+            @Override
+            public boolean onScroll(MotionEvent motionEvent, MotionEvent motionEvent1, float v, float v1) {
+                mOriginPoint.x -= v;
+                mOriginPoint.y += v1;
+                invalidate();
+                return false;
+            }
+        });
+
+        mScaleGestureDetector = new ScaleGestureDetector(context,
+                new ScaleGestureDetector.SimpleOnScaleGestureListener() {
+
+            @Override
+            public boolean onScale(ScaleGestureDetector scaleGestureDetector) {
+
+                return false;
+            }
+        });
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        return super.onTouchEvent(event);
+        mGestureDetector.onTouchEvent(event);
+        mScaleGestureDetector.onTouchEvent(event);
+        return true;
     }
 
     @Override
