@@ -14,11 +14,6 @@ import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
 
-import com.daoshengwanwu.math_util.calculator.Calculator;
-import com.daoshengwanwu.math_util.calculator.VarAriExp;
-import com.daoshengwanwu.math_util.calculator.Variable;
-import com.daoshengwanwu.math_util.calculator.VariableAssistant;
-
 
 public class CanvasView extends View {
     private static final int AXIS_WIDTH = 5; //坐标轴宽度
@@ -46,12 +41,6 @@ public class CanvasView extends View {
 
     private SparseArray<float[]> mCurves = new SparseArray<>();
     private OnDomainChangeListener mOnDomainChangeListener;
-
-    private Calculator mCalculator;
-    private VarAriExp mExpression;
-    private Variable mVariable;
-    private VariableAssistant mVariableAssistant;
-    private Calculator.ResultGenerator mResultGenerator;
 
 
     public CanvasView(Context context, @Nullable AttributeSet attrs) {
@@ -93,21 +82,6 @@ public class CanvasView extends View {
                 return false;
             }
         });
-
-
-        mCalculator = new Calculator();
-        mVariableAssistant = new VariableAssistant();
-        mVariableAssistant.addVariable("x", 0, false, 10, false, 1);
-        mExpression = new VarAriExp("1 / x", mVariableAssistant);
-        mResultGenerator = mCalculator.calculate(mExpression);
-        mVariable = mVariableAssistant.getVariable("x");
-        setOnDomainChangeListener(new OnDomainChangeListener() {
-            @Override
-            public void onDomainChange(CanvasView view, float preStart, float preEnd,
-                                       float start, float end, SparseArray<float[]> curves) {
-                addTestLine(start, end, view);
-            }
-        });
     }
 
     public void addLine(int key, float[] points) {
@@ -120,6 +94,10 @@ public class CanvasView extends View {
 
     public void setOnDomainChangeListener(OnDomainChangeListener listener) {
         mOnDomainChangeListener = listener;
+    }
+
+    public void refresh() {
+        invalidate();
     }
 
     @Override
@@ -140,7 +118,10 @@ public class CanvasView extends View {
             throw new RuntimeException("组件尺寸过小，请保证长宽均大于" + (2 * AXIS_MARGIN + 1));
         }
 
-        addTestLine(getCurrentDomainStart(), getCurrentDomainEnd(), this);
+        if (mOnDomainChangeListener != null) {
+            mOnDomainChangeListener.onDomainChange(this, -1, 1,
+                    getCurrentDomainStart(), getCurrentDomainEnd(), mCurves);
+        }
     }
 
     @Override
@@ -320,25 +301,5 @@ public class CanvasView extends View {
     public interface OnDomainChangeListener {
         void onDomainChange(CanvasView view, float preStart, float preEnd,
                             float start, float end, SparseArray<float[]> curves);
-    }
-
-    private void addTestLine(float start, float end, CanvasView view) {
-        Variable var = mVariable;
-        Calculator.ResultGenerator rst = mResultGenerator;
-
-        var.set(start, false, end, false, (end - start) / 500);
-        float[] points = new float[2 * var.size()];
-
-        int i = 0;
-        points[i++] = (float)var.curValue();
-        points[i++] = (float)rst.curValue();
-        while (var.hasNext()) {
-            points[i] = (float)var.nextValue();
-            points[i + 1] = (float)rst.curValue();
-
-            i += 2;
-        }
-        view.clearLines();
-        view.addLine(0, points);
     }
 }
