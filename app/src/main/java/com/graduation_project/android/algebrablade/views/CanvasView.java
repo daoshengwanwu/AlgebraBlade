@@ -30,13 +30,13 @@ public class CanvasView extends View {
     private static final int INDEX_COLOR = 0Xff000000; //坐标轴下标的颜色
     private static final int INDEX_MARGIN = 12; //坐标轴下标与坐标轴的距离
     private static final int CURVE_WIDTH = 3; //曲线宽度
-    private static final int CURVE_COLOR = 0xff00ffff; //曲线颜色
+    private static final int CURVE_COLOR = 0xff000000; //曲线颜色
 
     private int mCurWidth = -1; //当前View的宽度
     private int mCurHeight = -1; //当前View的高度
     private int mPixelOfLattice = 100; //默认坐标轴一格为50像素
     private int mUnitOfLattice = 1; //默认坐标轴一格代表一个单位
-    private Point mOriginPoint = new Point(-300, 500); //坐标原点相对于Canvas坐标轴的坐标
+    private Point mOriginPoint = new Point(0, 0); //坐标原点相对于Canvas坐标轴的坐标
 
     private Paint mPaint = new Paint();
     private Rect mTextBounds = new Rect();
@@ -47,9 +47,11 @@ public class CanvasView extends View {
     private SparseArray<float[]> mCurves = new SparseArray<>();
     private OnDomainChangeListener mOnDomainChangeListener;
 
-    private Calculator mCalculator = new Calculator();
+    private Calculator mCalculator;
     private VarAriExp mExpression;
-    private VariableAssistant mVariableAssistant = new VariableAssistant();
+    private Variable mVariable;
+    private VariableAssistant mVariableAssistant;
+    private Calculator.ResultGenerator mResultGenerator;
 
 
     public CanvasView(Context context, @Nullable AttributeSet attrs) {
@@ -92,6 +94,13 @@ public class CanvasView extends View {
             }
         });
 
+
+        mCalculator = new Calculator();
+        mVariableAssistant = new VariableAssistant();
+        mVariableAssistant.addVariable("x", 0, false, 10, false, 1);
+        mExpression = new VarAriExp("1 / x", mVariableAssistant);
+        mResultGenerator = mCalculator.calculate(mExpression);
+        mVariable = mVariableAssistant.getVariable("x");
         setOnDomainChangeListener(new OnDomainChangeListener() {
             @Override
             public void onDomainChange(CanvasView view, float preStart, float preEnd,
@@ -314,16 +323,13 @@ public class CanvasView extends View {
     }
 
     private void addTestLine(float start, float end, CanvasView view) {
-        mVariableAssistant.clear();
-        mVariableAssistant.addVariable("x", start, false,
-                end, false, 0.1);
-        mExpression = new VarAriExp("sin(x) + |x|", mVariableAssistant);
-        Calculator.ResultGenerator rst = mCalculator.calculate(mExpression);
+        Variable var = mVariable;
+        Calculator.ResultGenerator rst = mResultGenerator;
 
-        int i = 0;
-        Variable var = mVariableAssistant.getVariable("x");
+        var.set(start, false, end, false, (end - start) / 500);
         float[] points = new float[2 * var.size()];
 
+        int i = 0;
         points[i++] = (float)var.curValue();
         points[i++] = (float)rst.curValue();
         while (var.hasNext()) {
