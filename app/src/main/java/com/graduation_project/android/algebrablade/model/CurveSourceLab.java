@@ -45,6 +45,7 @@ public class CurveSourceLab {
         return mCurveSources;
     }
 
+    //添加测试曲线
     private void addTestData() {
         String expression = "x";
         VariableAssistant variableAssistant = new VariableAssistant().addVariable("x");
@@ -77,7 +78,7 @@ public class CurveSourceLab {
 
         expression = "log(2)~x";
         variableAssistant = new VariableAssistant().addVariable("x",
-                0, true, 10, false, 0.01);
+                1, false, 10, false, 1);
         putCurveSource(7, new CurveSource(new VarAriExp(expression, variableAssistant), true));
 
         expression = "6*sin(sin(x/3))";

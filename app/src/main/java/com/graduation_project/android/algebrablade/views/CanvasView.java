@@ -4,7 +4,7 @@ package com.graduation_project.android.algebrablade.views;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.graphics.Point;
+import android.graphics.PointF;
 import android.graphics.Rect;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
@@ -29,9 +29,9 @@ public class CanvasView extends View {
 
     private int mCurWidth = -1; //当前View的宽度
     private int mCurHeight = -1; //当前View的高度
-    private int mPixelOfLattice = 100; //默认坐标轴一格为50像素
-    private int mUnitOfLattice = 1; //默认坐标轴一格代表一个单位
-    private Point mOriginPoint = new Point(0, 0); //坐标原点相对于Canvas坐标轴的坐标
+    private float mPixelOfLattice = 100; //默认坐标轴一格为50像素
+    private float mUnitOfLattice = 0.5f; //默认坐标轴一格代表一个单位
+    private PointF mOriginPoint = new PointF(0, 0); //坐标原点相对于Canvas坐标轴的坐标
 
     private Paint mPaint = new Paint();
     private Rect mTextBounds = new Rect();
@@ -41,6 +41,8 @@ public class CanvasView extends View {
 
     private SparseArray<float[]> mCurves = new SparseArray<>();
     private OnDomainChangeListener mOnDomainChangeListener;
+
+    private boolean mIsScaleMotion = false;
 
 
     public CanvasView(Context context, @Nullable AttributeSet attrs) {
@@ -73,13 +75,49 @@ public class CanvasView extends View {
             }
         });
 
-        mScaleGestureDetector = new ScaleGestureDetector(context,
-                new ScaleGestureDetector.SimpleOnScaleGestureListener() {
+        mScaleGestureDetector = new ScaleGestureDetector(context, new ScaleGestureDetector.SimpleOnScaleGestureListener() {
 
             @Override
             public boolean onScale(ScaleGestureDetector scaleGestureDetector) {
+                float preDomainStart = getCurrentDomainStart();
+                float preDomainEnd = getCurrentDomainEnd();
+                float scaleFocusX = scaleGestureDetector.getFocusX() - mOriginPoint.x;
+                float scaleFocusY = scaleGestureDetector.getFocusY() - mOriginPoint.y;
+                float delta = scaleGestureDetector.getCurrentSpan() -
+                        scaleGestureDetector.getPreviousSpan();
+                float prePixelOfLattice = mPixelOfLattice;
 
+                //改变mPixelOfLattice
+                mPixelOfLattice += delta / 50;
+
+                float latticeScaleFactor = mPixelOfLattice / prePixelOfLattice;
+                mOriginPoint.x -= Math.abs(scaleFocusX) * latticeScaleFactor - Math.abs(scaleFocusX);
+                mOriginPoint.y -= Math.abs(scaleFocusY) * latticeScaleFactor - Math.abs(scaleFocusY);
+
+                if (mOnDomainChangeListener != null) {
+                    mOnDomainChangeListener.onDomainChange(
+                            CanvasView.this,
+                            preDomainStart,
+                            preDomainEnd,
+                            getCurrentDomainStart(),
+                            getCurrentDomainEnd(),
+                            mCurves
+                    );
+                }
+                invalidate();
                 return false;
+            }
+
+            @Override
+            public boolean onScaleBegin(ScaleGestureDetector detector) {
+                mIsScaleMotion = true;
+                return super.onScaleBegin(detector);
+            }
+
+            @Override
+            public void onScaleEnd(ScaleGestureDetector detector) {
+                mIsScaleMotion = false;
+                super.onScaleEnd(detector);
             }
         });
     }
@@ -102,8 +140,11 @@ public class CanvasView extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        mGestureDetector.onTouchEvent(event);
         mScaleGestureDetector.onTouchEvent(event);
+        if (!mIsScaleMotion) {
+            mGestureDetector.onTouchEvent(event);
+        }
+
         return true;
     }
 
@@ -119,7 +160,7 @@ public class CanvasView extends View {
         }
 
         if (mOnDomainChangeListener != null) {
-            mOnDomainChangeListener.onDomainChange(this, -1, 1,
+            mOnDomainChangeListener.onDomainChange(this, 1, -1,
                     getCurrentDomainStart(), getCurrentDomainEnd(), mCurves);
         }
     }
@@ -145,7 +186,7 @@ public class CanvasView extends View {
      */
     private void drawCoordinate(Canvas canvas) {
         //算出X轴的纵坐标与Y轴的横坐标
-        int yCoordinateOfXAxis = mOriginPoint.y;
+        int yCoordinateOfXAxis = (int)mOriginPoint.y;
         if (yCoordinateOfXAxis > mCurHeight / 2 - AXIS_MARGIN) {
             yCoordinateOfXAxis = mCurHeight / 2 - AXIS_MARGIN;
         }
@@ -153,7 +194,7 @@ public class CanvasView extends View {
             yCoordinateOfXAxis = mCurHeight / 2 - mCurHeight + AXIS_MARGIN;
         }
 
-        int xCoordinateOfYAxis = mOriginPoint.x;
+        int xCoordinateOfYAxis = (int)mOriginPoint.x;
         if (xCoordinateOfYAxis > mCurWidth - mCurWidth / 2 - AXIS_MARGIN) {
             xCoordinateOfYAxis = mCurWidth - mCurWidth / 2 - AXIS_MARGIN;
         }
@@ -163,23 +204,23 @@ public class CanvasView extends View {
 
         // 绘制X坐标轴上的格子及下标
         int xCoordinateOfFirstLattice;
-        int unitsOfFirstLattice;
-        int origin_leftEdge_len = Math.abs(mOriginPoint.x + mCurWidth / 2);
-        int latticeNum = origin_leftEdge_len / mPixelOfLattice;
-        if (mOriginPoint.x > -mCurWidth / 2) {
-            origin_leftEdge_len = latticeNum * mPixelOfLattice;
-            xCoordinateOfFirstLattice = mOriginPoint.x - origin_leftEdge_len;
+        float unitsOfFirstLattice;
+        int origin_leftEdge_len = Math.abs((int)mOriginPoint.x + mCurWidth / 2);
+        int latticeNum = origin_leftEdge_len / (int)mPixelOfLattice;
+        if ((int)mOriginPoint.x > -mCurWidth / 2) {
+            origin_leftEdge_len = latticeNum * (int)mPixelOfLattice;
+            xCoordinateOfFirstLattice = (int)mOriginPoint.x - origin_leftEdge_len;
             unitsOfFirstLattice = -latticeNum * mUnitOfLattice;
         } else {
-            origin_leftEdge_len = (latticeNum + 1) * mPixelOfLattice;
-            xCoordinateOfFirstLattice = mOriginPoint.x + origin_leftEdge_len;
+            origin_leftEdge_len = (latticeNum + 1) * (int)mPixelOfLattice;
+            xCoordinateOfFirstLattice = (int)mOriginPoint.x + origin_leftEdge_len;
             unitsOfFirstLattice = (latticeNum + 1) * mUnitOfLattice;
         }
 
         mPaint.reset();
         mPaint.setStrokeWidth(GUIDE_LINE_WIDTH);
         mPaint.setColor(GUIDE_LINE_COLOR);
-        for (int x = xCoordinateOfFirstLattice; x < mCurWidth - mCurWidth / 2; x += mPixelOfLattice) {
+        for (int x = xCoordinateOfFirstLattice; x < mCurWidth - mCurWidth / 2; x += (int)mPixelOfLattice) {
             canvas.drawLine(x, mCurHeight / 2, x, mCurHeight / 2 - mCurHeight, mPaint);
         }
 
@@ -188,8 +229,9 @@ public class CanvasView extends View {
         mPaint.setStyle(Paint.Style.FILL);
         mPaint.setColor(INDEX_COLOR);
         mPaint.setTextSize(INDEX_SIZE);
-        for (int x = xCoordinateOfFirstLattice, u = unitsOfFirstLattice;
-             x < mCurWidth - mCurWidth / 2; x += mPixelOfLattice, u += mUnitOfLattice) {
+        float u = unitsOfFirstLattice;
+        for (int x = xCoordinateOfFirstLattice;
+             x < mCurWidth - mCurWidth / 2; x += (int)mPixelOfLattice, u += mUnitOfLattice) {
 
             String indexStr = String.valueOf(u);
             mPaint.getTextBounds(indexStr, 0, indexStr.length(), mTextBounds);
@@ -200,21 +242,21 @@ public class CanvasView extends View {
 
         // 绘制Y坐标轴上的格子及下标
         int yCoordinateOfFirstLattice;
-        int origin_bottomEdge_len = Math.abs(mOriginPoint.y + mCurHeight - mCurHeight / 2);
-        latticeNum = origin_bottomEdge_len / mPixelOfLattice;
-        if (mOriginPoint.y > mCurHeight / 2 - mCurHeight) {
-            origin_bottomEdge_len = latticeNum * mPixelOfLattice;
-            yCoordinateOfFirstLattice = mOriginPoint.y - origin_bottomEdge_len;
+        int origin_bottomEdge_len = Math.abs((int)mOriginPoint.y + mCurHeight - mCurHeight / 2);
+        latticeNum = origin_bottomEdge_len / (int)mPixelOfLattice;
+        if ((int)mOriginPoint.y > mCurHeight / 2 - mCurHeight) {
+            origin_bottomEdge_len = latticeNum * (int)mPixelOfLattice;
+            yCoordinateOfFirstLattice = (int)mOriginPoint.y - origin_bottomEdge_len;
             unitsOfFirstLattice = -latticeNum * mUnitOfLattice;
         } else {
-            origin_bottomEdge_len = (latticeNum + 1) * mPixelOfLattice;
-            yCoordinateOfFirstLattice = mOriginPoint.y + origin_bottomEdge_len;
+            origin_bottomEdge_len = (latticeNum + 1) * (int)mPixelOfLattice;
+            yCoordinateOfFirstLattice = (int)mOriginPoint.y + origin_bottomEdge_len;
             unitsOfFirstLattice = (latticeNum + 1) * mUnitOfLattice;
         }
 
         mPaint.setStrokeWidth(GUIDE_LINE_WIDTH);
         mPaint.setColor(GUIDE_LINE_COLOR);
-        for (int y = yCoordinateOfFirstLattice; y < mCurHeight / 2; y += mPixelOfLattice) {
+        for (int y = yCoordinateOfFirstLattice; y < mCurHeight / 2; y += (int)mPixelOfLattice) {
             canvas.drawLine(-mCurWidth / 2, y, mCurWidth - mCurWidth / 2, y, mPaint);
         }
 
@@ -223,8 +265,9 @@ public class CanvasView extends View {
         mPaint.setStyle(Paint.Style.FILL);
         mPaint.setColor(INDEX_COLOR);
         mPaint.setTextSize(INDEX_SIZE);
-        for (int y = yCoordinateOfFirstLattice, u = unitsOfFirstLattice;
-             y < mCurHeight / 2; y += mPixelOfLattice, u += mUnitOfLattice) {
+        u = unitsOfFirstLattice;
+        for (int y = yCoordinateOfFirstLattice;
+             y < mCurHeight / 2; y += (int)mPixelOfLattice, u += mUnitOfLattice) {
 
             String indexStr = String.valueOf(u);
             mPaint.getTextBounds(indexStr, 0, indexStr.length(), mTextBounds);
@@ -233,7 +276,6 @@ public class CanvasView extends View {
                     -y + mTextBounds.height() / 2, mPaint);
         }
         canvas.restore();
-
 
         // 绘制X与Y坐标轴
         mPaint.setStyle(Paint.Style.STROKE);
@@ -280,21 +322,21 @@ public class CanvasView extends View {
     }
 
     private int logicXCoordinate2CanvasXCoordinate(double logicXCoordinate) {
-        int logicPixelXCoordinate = (int)(logicXCoordinate / mUnitOfLattice * mPixelOfLattice);
-        return logicPixelXCoordinate + mOriginPoint.x;
+        int logicPixelXCoordinate = (int)(logicXCoordinate / mUnitOfLattice * (int)mPixelOfLattice);
+        return logicPixelXCoordinate + (int)mOriginPoint.x;
     }
 
     private int logicYCoordinate2CanvasYCoordinate(double logicYCoordinate) {
-        int logicPixelYCoordinate = (int)(logicYCoordinate / mUnitOfLattice * mPixelOfLattice);
-        return logicPixelYCoordinate + mOriginPoint.y;
+        int logicPixelYCoordinate = (int)(logicYCoordinate / mUnitOfLattice * (int)mPixelOfLattice);
+        return logicPixelYCoordinate + (int)mOriginPoint.y;
     }
 
     private float getCurrentDomainStart() {
-        return (-mCurWidth / 2 - mOriginPoint.x) / (float)mPixelOfLattice * mUnitOfLattice;
+        return (float)(-mCurWidth / 2 - (int)mOriginPoint.x) / (int)mPixelOfLattice * mUnitOfLattice;
     }
 
     private float getCurrentDomainEnd() {
-        return (mCurWidth - mCurWidth / 2 - mOriginPoint.x) / (float)mPixelOfLattice * mUnitOfLattice;
+        return (float)(mCurWidth - mCurWidth / 2 - (int)mOriginPoint.x) / (int)mPixelOfLattice * mUnitOfLattice;
     }
 
 
