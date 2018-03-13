@@ -25,7 +25,7 @@ public class CanvasView extends View {
     private static final int INDEX_COLOR = 0Xff000000; //坐标轴下标的颜色
     private static final int INDEX_MARGIN = 12; //坐标轴下标与坐标轴的距离
     private static final int CURVE_WIDTH = 3; //曲线宽度
-    private static final int CURVE_COLOR = 0xff000000; //曲线颜色
+    private static final int CURVE_COLOR = 0xff00afff; //曲线颜色
 
     private int mCurWidth = -1; //当前View的宽度
     private int mCurHeight = -1; //当前View的高度
