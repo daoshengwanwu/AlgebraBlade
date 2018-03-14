@@ -78,7 +78,7 @@ public class CurveSourceLab {
 
         expression = "log(2)~x";
         variableAssistant = new VariableAssistant().addVariable("x",
-                1, false, 10, false, 1);
+                0, true, 10, false, 0.05);
         putCurveSource(7, new CurveSource(new VarAriExp(expression, variableAssistant), true));
 
         expression = "6*sin(sin(x/3))";

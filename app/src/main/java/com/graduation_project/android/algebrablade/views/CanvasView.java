@@ -17,20 +17,26 @@ import android.view.View;
 
 public class CanvasView extends View {
     private static final int AXIS_WIDTH = 5; //坐标轴宽度
-    private static final int AXIS_MARGIN = 35; //坐标轴距离本View边缘最近距离
+    private static final int AXIS_MARGIN = 8; //坐标轴距离本View边缘最近距离
     private static final int AXIS_COLOR = 0xff000000; //坐标轴的颜色
+    private static final int X_AXIS_LATTICE_INDEX_MARGIN = 10;
     private static final int GUIDE_LINE_WIDTH = 2; //辅助线的宽度
     private static final int GUIDE_LINE_COLOR = 0xffdcdcdc; //辅助线的颜色
     private static final int INDEX_SIZE = 30; //坐标轴下标的文字大小
     private static final int INDEX_COLOR = 0Xff000000; //坐标轴下标的颜色
-    private static final int INDEX_MARGIN = 12; //坐标轴下标与坐标轴的距离
+    private static final int INDEX_MARGIN = 38; //坐标轴下标与坐标轴的距离
     private static final int CURVE_WIDTH = 3; //曲线宽度
     private static final int CURVE_COLOR = 0xff00afff; //曲线颜色
+    private static final float LATTICE_MAX_PIXEL = 150; //格子的最大像素值
+    private static final float LATTICE_MIN_PIXEL = LATTICE_MAX_PIXEL / 2; //格子的最小像素值
+    private static final float LATTICE_MAX_UNIT = 1024.1f;//一个格子最大代表的单位
+    private static final float LATTICE_MIN_UNIT = 0.0009999f;//一个格子最小代表的单位
+    private static final float SCALE_SENSITIVITY = 5;//缩放敏感度，越小越敏感
 
     private int mCurWidth = -1; //当前View的宽度
     private int mCurHeight = -1; //当前View的高度
-    private float mPixelOfLattice = 100; //默认坐标轴一格为50像素
-    private float mUnitOfLattice = 0.5f; //默认坐标轴一格代表一个单位
+    private float mPixelOfLattice = (LATTICE_MAX_PIXEL + LATTICE_MIN_PIXEL) / 2; //默认坐标轴一格的像素
+    private float mUnitOfLattice = 2f; //默认坐标轴一格代表一个单位
     private PointF mOriginPoint = new PointF(0, 0); //坐标原点相对于Canvas坐标轴的坐标
 
     private Paint mPaint = new Paint();
@@ -75,42 +81,89 @@ public class CanvasView extends View {
             }
         });
 
-        mScaleGestureDetector = new ScaleGestureDetector(context, new ScaleGestureDetector.SimpleOnScaleGestureListener() {
+        mScaleGestureDetector = new ScaleGestureDetector(context,
+                new ScaleGestureDetector.SimpleOnScaleGestureListener() {
+
+            private float mStartSpan;
+            private float mStartPixelOfLattice;
+            private float mStartUnitOfLattice;
+            private float mStartOriginPointX;
+            private float mStartOriginPointY;
+            private float mStartFocusX;
+            private float mStartFocusY;
 
             @Override
             public boolean onScale(ScaleGestureDetector scaleGestureDetector) {
                 float preDomainStart = getCurrentDomainStart();
                 float preDomainEnd = getCurrentDomainEnd();
-                float scaleFocusX = scaleGestureDetector.getFocusX() - mOriginPoint.x;
-                float scaleFocusY = scaleGestureDetector.getFocusY() - mOriginPoint.y;
-                float delta = scaleGestureDetector.getCurrentSpan() -
-                        scaleGestureDetector.getPreviousSpan();
-                float prePixelOfLattice = mPixelOfLattice;
+                float scaleFocusPixelX = mStartFocusX - mCurWidth / 2 - mStartOriginPointX;
+                float scaleFocusPixelY = mCurHeight / 2 - mStartFocusY - mStartOriginPointY;
+                float scaleFocusUnitX = scaleFocusPixelX / mStartPixelOfLattice * mStartUnitOfLattice;
+                float scaleFocusUnitY = scaleFocusPixelY / mStartPixelOfLattice * mStartUnitOfLattice;
+                float fullDelta = (scaleGestureDetector.getCurrentSpan() - mStartSpan) / SCALE_SENSITIVITY;
+                float delta = fullDelta % (LATTICE_MAX_PIXEL - LATTICE_MIN_PIXEL);
+                float unitDelta = (float)Math.pow(2, (int)fullDelta / (int)(LATTICE_MAX_PIXEL - LATTICE_MIN_PIXEL));
+                float tmpUnitOfLattice;
+                boolean change = false;
 
-                //改变mPixelOfLattice
-                mPixelOfLattice += delta / 50;
+                if (mStartPixelOfLattice + delta < LATTICE_MIN_PIXEL) {
+                    unitDelta /= 2;
+                    if (mStartUnitOfLattice / unitDelta <= LATTICE_MAX_UNIT) {
+                        mPixelOfLattice = LATTICE_MAX_PIXEL - (LATTICE_MIN_PIXEL - mStartPixelOfLattice - delta);
+                        mUnitOfLattice = mStartUnitOfLattice / unitDelta;
 
-                float latticeScaleFactor = mPixelOfLattice / prePixelOfLattice;
-                mOriginPoint.x -= Math.abs(scaleFocusX) * latticeScaleFactor - Math.abs(scaleFocusX);
-                mOriginPoint.y -= Math.abs(scaleFocusY) * latticeScaleFactor - Math.abs(scaleFocusY);
+                        change = true;
+                    }
+                } else if (mStartPixelOfLattice + delta > LATTICE_MAX_PIXEL) {
+                    unitDelta *= 2;
+                    if (mStartUnitOfLattice / unitDelta >= LATTICE_MIN_UNIT) {
+                        mPixelOfLattice = LATTICE_MIN_PIXEL + (mStartPixelOfLattice + delta - LATTICE_MAX_PIXEL);
+                        mUnitOfLattice = mStartUnitOfLattice / unitDelta;
 
-                if (mOnDomainChangeListener != null) {
-                    mOnDomainChangeListener.onDomainChange(
-                            CanvasView.this,
-                            preDomainStart,
-                            preDomainEnd,
-                            getCurrentDomainStart(),
-                            getCurrentDomainEnd(),
-                            mCurves
-                    );
+                        change = true;
+                    }
+                } else {
+                    tmpUnitOfLattice = mStartUnitOfLattice / unitDelta;
+                    if (tmpUnitOfLattice >= LATTICE_MIN_UNIT && tmpUnitOfLattice <= LATTICE_MAX_UNIT) {
+                        mPixelOfLattice = mStartPixelOfLattice + delta;
+                        mUnitOfLattice = mStartUnitOfLattice / unitDelta;
+
+                        change = true;
+                    }
                 }
-                invalidate();
+
+                if (change) {
+                    mOriginPoint.x = mStartOriginPointX - scaleFocusUnitX / mUnitOfLattice * mPixelOfLattice + scaleFocusPixelX;
+                    mOriginPoint.y = mStartOriginPointY - scaleFocusUnitY / mUnitOfLattice * mPixelOfLattice + scaleFocusPixelY;
+
+                    if (mOnDomainChangeListener != null) {
+                        mOnDomainChangeListener.onDomainChange(
+                                CanvasView.this,
+                                preDomainStart,
+                                preDomainEnd,
+                                getCurrentDomainStart(),
+                                getCurrentDomainEnd(),
+                                mCurves
+                        );
+                    }
+                    invalidate();
+                }
+
                 return false;
             }
 
             @Override
             public boolean onScaleBegin(ScaleGestureDetector detector) {
                 mIsScaleMotion = true;
+
+                mStartFocusX = detector.getFocusX();
+                mStartFocusY = detector.getFocusY();
+                mStartSpan = detector.getCurrentSpan();
+                mStartPixelOfLattice = mPixelOfLattice;
+                mStartUnitOfLattice = mUnitOfLattice;
+                mStartOriginPointX = mOriginPoint.x;
+                mStartOriginPointY = mOriginPoint.y;
+
                 return super.onScaleBegin(detector);
             }
 
@@ -221,7 +274,9 @@ public class CanvasView extends View {
         mPaint.setStrokeWidth(GUIDE_LINE_WIDTH);
         mPaint.setColor(GUIDE_LINE_COLOR);
         for (int x = xCoordinateOfFirstLattice; x < mCurWidth - mCurWidth / 2; x += (int)mPixelOfLattice) {
-            canvas.drawLine(x, mCurHeight / 2, x, mCurHeight / 2 - mCurHeight, mPaint);
+            canvas.drawLine(x, mCurHeight / 2,
+                    x, mCurHeight / 2 - mCurHeight + INDEX_MARGIN + X_AXIS_LATTICE_INDEX_MARGIN,
+                    mPaint);
         }
 
         canvas.save();
@@ -233,18 +288,19 @@ public class CanvasView extends View {
         for (int x = xCoordinateOfFirstLattice;
              x < mCurWidth - mCurWidth / 2; x += (int)mPixelOfLattice, u += mUnitOfLattice) {
 
-            String indexStr = String.valueOf(u);
+            String indexStr = String.valueOf(Math.round(u * 1000) / 1000f);
             mPaint.getTextBounds(indexStr, 0, indexStr.length(), mTextBounds);
             canvas.drawText(indexStr, x - mTextBounds.width() / 2,
-                    -yCoordinateOfXAxis + mTextBounds.height() + INDEX_MARGIN, mPaint);
+                    mCurHeight - mCurHeight / 2 - INDEX_MARGIN + mTextBounds.height(), mPaint);
         }
         canvas.restore();
 
         // 绘制Y坐标轴上的格子及下标
         int yCoordinateOfFirstLattice;
-        int origin_bottomEdge_len = Math.abs((int)mOriginPoint.y + mCurHeight - mCurHeight / 2);
+        int bottomYCoordinate = mCurHeight / 2 - mCurHeight + INDEX_MARGIN + X_AXIS_LATTICE_INDEX_MARGIN;
+        int origin_bottomEdge_len = Math.abs((int)mOriginPoint.y - bottomYCoordinate);
         latticeNum = origin_bottomEdge_len / (int)mPixelOfLattice;
-        if ((int)mOriginPoint.y > mCurHeight / 2 - mCurHeight) {
+        if ((int)mOriginPoint.y > bottomYCoordinate) {
             origin_bottomEdge_len = latticeNum * (int)mPixelOfLattice;
             yCoordinateOfFirstLattice = (int)mOriginPoint.y - origin_bottomEdge_len;
             unitsOfFirstLattice = -latticeNum * mUnitOfLattice;
@@ -269,11 +325,11 @@ public class CanvasView extends View {
         for (int y = yCoordinateOfFirstLattice;
              y < mCurHeight / 2; y += (int)mPixelOfLattice, u += mUnitOfLattice) {
 
-            String indexStr = String.valueOf(u);
+            String indexStr = String.valueOf(Math.round(u * 1000) / 1000f);
             mPaint.getTextBounds(indexStr, 0, indexStr.length(), mTextBounds);
             canvas.drawText(indexStr,
-                    xCoordinateOfYAxis - mTextBounds.width() - INDEX_MARGIN,
-                    -y + mTextBounds.height() / 2, mPaint);
+                    -mCurWidth / 2 + INDEX_MARGIN - mTextBounds.height(),
+                    -y, mPaint);
         }
         canvas.restore();
 
