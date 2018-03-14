@@ -85,7 +85,7 @@ public class GraphicActivity extends AppCompatActivity {
         points[i++] = (float)x.curValue();
         points[i++] = (float)resultGenerator.curValue();
 
-        while (x.hasNext()) {
+        while (x.hasNext() && i < points.length - 1) {
             points[i++] = (float)x.nextValue();
             points[i++] = (float)resultGenerator.curValue();
         }
