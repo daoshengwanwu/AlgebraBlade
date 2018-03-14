@@ -4,6 +4,7 @@ package com.graduation_project.android.algebrablade.views;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.Path;
 import android.graphics.PointF;
 import android.graphics.Rect;
 import android.support.annotation.Nullable;
@@ -39,6 +40,7 @@ public class CanvasView extends View {
     private float mUnitOfLattice = 2f; //默认坐标轴一格代表一个单位
     private PointF mOriginPoint = new PointF(0, 0); //坐标原点相对于Canvas坐标轴的坐标
 
+    private Path mPath = new Path();
     private Paint mPaint = new Paint();
     private Rect mTextBounds = new Rect();
 
@@ -173,6 +175,8 @@ public class CanvasView extends View {
                 super.onScaleEnd(detector);
             }
         });
+
+        setLayerType(View.LAYER_TYPE_SOFTWARE, null);
     }
 
     public void addLine(int key, float[] points) {
@@ -361,19 +365,15 @@ public class CanvasView extends View {
                 continue;
             }
 
-            float preX = points[0];
-            float preY = points[1];
+            mPath.reset();
+            mPath.rewind();
+            mPath.moveTo(logicXCoordinate2CanvasXCoordinate(points[0]),
+                    logicYCoordinate2CanvasYCoordinate(points[1]));
             for (int j = 2; j < points.length; j += 2) {
-                canvas.drawLine(
-                        logicXCoordinate2CanvasXCoordinate(preX),
-                        logicYCoordinate2CanvasYCoordinate(preY),
-                        logicXCoordinate2CanvasXCoordinate(points[j]),
-                        logicYCoordinate2CanvasYCoordinate(points[j + 1]),
-                        mPaint);
-
-                preX = points[j];
-                preY = points[j + 1];
+                mPath.lineTo(logicXCoordinate2CanvasXCoordinate(points[j]),
+                        logicYCoordinate2CanvasYCoordinate(points[j + 1]));
             }
+            canvas.drawPath(mPath, mPaint);
         }
     }
 
