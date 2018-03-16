@@ -15,6 +15,7 @@ import com.graduation_project.android.algebrablade.model.CurveSource;
 import com.graduation_project.android.algebrablade.model.CurveSourceLab;
 import com.graduation_project.android.algebrablade.model.ResultSource;
 import com.graduation_project.android.algebrablade.views.CanvasView;
+import com.graduation_project.android.algebrablade.views.CanvasView.Curve;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -44,18 +45,20 @@ public class GraphicActivity extends AppCompatActivity {
         mCanvasView.setOnDomainChangeListener(new CanvasView.OnDomainChangeListener() {
             @Override
             public void onDomainChange(CanvasView view, float preStart, float preEnd,
-                                       float start, float end, SparseArray<float[]> curves) {
+                                       float start, float end, SparseArray<Curve> curves) {
 
                 int key = -1;
                 ResultSource resultSource = null;
                 float[] pointsContainer = null;
                 Variable variable = null;
+                Curve curve = null;
 
                 view.clearLines();
                 for (int i = 0; i < mResultSourceSparseArray.size(); i++) {
                     key = mResultSourceSparseArray.keyAt(i);
                     resultSource = mResultSourceSparseArray.valueAt(i);
-                    pointsContainer = curves.get(key);
+                    curve = curves.get(key);
+                    pointsContainer = curve != null ? curve.points : null;
                     variable = resultSource.resultGenerator.getVarAriExp().
                             getVariableAssistant().getVariable("x");
 
@@ -66,14 +69,14 @@ public class GraphicActivity extends AppCompatActivity {
                         throw new VariableNotSetException();
                     }
 
-                    view.addLine(key, getCurvePointsFromResultGenerator(resultSource.resultGenerator, pointsContainer));
+                    view.addLine(key, getCurveFromResultSource(resultSource, pointsContainer));
                 }
             }
         });
     }
 
-    private float[] getCurvePointsFromResultGenerator(
-            Calculator.ResultGenerator resultGenerator, float[] pointsContainer) {
+    private Curve getCurveFromResultSource(ResultSource resultSource, float[] pointsContainer) {
+        Calculator.ResultGenerator resultGenerator = resultSource.resultGenerator;
 
         VarAriExp varAriExp = resultGenerator.getVarAriExp();
         Variable x = varAriExp.getVariableAssistant().getVariable("x");
@@ -90,7 +93,7 @@ public class GraphicActivity extends AppCompatActivity {
             points[i++] = (float)resultGenerator.curValue();
         }
 
-        return points;
+        return new Curve(points, resultSource.color, i);
     }
 
     private void updateResultGeneratorsFromCurveSourceLab() {
@@ -104,7 +107,8 @@ public class GraphicActivity extends AppCompatActivity {
             curveSource = curveSources.valueAt(i);
 
             resultGenerator = mCalculator.calculate(curveSource.varAriExp);
-            mResultSourceSparseArray.put(key, new ResultSource(resultGenerator, curveSource.isDomainSet));
+            mResultSourceSparseArray.put(key,
+                    new ResultSource(resultGenerator, curveSource.isDomainSet, curveSource.color));
         }
     }
 }

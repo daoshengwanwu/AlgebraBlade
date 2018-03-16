@@ -1,6 +1,7 @@
 package com.graduation_project.android.algebrablade.model;
 
 
+import android.graphics.Color;
 import android.util.SparseArray;
 
 import com.daoshengwanwu.math_util.calculator.VarAriExp;
@@ -49,44 +50,62 @@ public class CurveSourceLab {
     private void addTestData() {
         String expression = "x";
         VariableAssistant variableAssistant = new VariableAssistant().addVariable("x");
-        putCurveSource(0, new CurveSource(new VarAriExp(expression, variableAssistant), false));
+        putCurveSource(0, new CurveSource(
+                new VarAriExp(expression, variableAssistant), false, getRandomColor()));
 
         expression = "x^2";
         variableAssistant = new VariableAssistant().addVariable("x");
-        putCurveSource(1, new CurveSource(new VarAriExp(expression, variableAssistant), false));
+        putCurveSource(1, new CurveSource(
+                new VarAriExp(expression, variableAssistant), false, getRandomColor()));
 
         expression = "x^3";
         variableAssistant = new VariableAssistant().addVariable("x");
-        putCurveSource(2, new CurveSource(new VarAriExp(expression, variableAssistant), false));
+        putCurveSource(2, new CurveSource(
+                new VarAriExp(expression, variableAssistant), false, getRandomColor()));
 
         expression = "sin(x)";
         variableAssistant = new VariableAssistant().addVariable("x");
-        putCurveSource(3, new CurveSource(new VarAriExp(expression, variableAssistant), false));
+        putCurveSource(3, new CurveSource(
+                new VarAriExp(expression, variableAssistant), false, getRandomColor()));
 
         expression = "cos(x)";
         variableAssistant = new VariableAssistant().addVariable("x");
-        putCurveSource(4, new CurveSource(new VarAriExp(expression, variableAssistant), false));
+        putCurveSource(4, new CurveSource(
+                new VarAriExp(expression, variableAssistant), false, getRandomColor()));
 
         expression = "|x|";
         variableAssistant = new VariableAssistant().addVariable("x");
-        putCurveSource(5, new CurveSource(new VarAriExp(expression, variableAssistant), false));
+        putCurveSource(5, new CurveSource(
+                new VarAriExp(expression, variableAssistant), false, getRandomColor()));
 
         expression = "sqrt(x)";
         variableAssistant = new VariableAssistant().addVariable("x",
                 0, true, 10, false, 0.01);
-        putCurveSource(6, new CurveSource(new VarAriExp(expression, variableAssistant), true));
+        putCurveSource(6, new CurveSource(
+                new VarAriExp(expression, variableAssistant), true, getRandomColor()));
 
         expression = "log(2)~x";
         variableAssistant = new VariableAssistant().addVariable("x",
                 0, true, 10, false, 0.05);
-        putCurveSource(7, new CurveSource(new VarAriExp(expression, variableAssistant), true));
+        putCurveSource(7, new CurveSource(
+                new VarAriExp(expression, variableAssistant), true, getRandomColor()));
 
         expression = "6*sin(sin(x/3))";
         variableAssistant = new VariableAssistant().addVariable("x");
-        putCurveSource(8, new CurveSource(new VarAriExp(expression, variableAssistant), false));
+        putCurveSource(8, new CurveSource(
+                new VarAriExp(expression, variableAssistant), false, getRandomColor()));
 
         expression = "3*cos(cos(x*2))";
         variableAssistant = new VariableAssistant().addVariable("x");
-        putCurveSource(9, new CurveSource(new VarAriExp(expression, variableAssistant), false));
+        putCurveSource(9, new CurveSource(
+                new VarAriExp(expression, variableAssistant), false, getRandomColor()));
+    }
+
+    private int getRandomColor() {
+        int r = (int)(Math.random() * 255);
+        int g = (int)(Math.random() * 255);
+        int b = (int)(Math.random() * 255);
+
+        return Color.rgb(r, g, b);
     }
 }

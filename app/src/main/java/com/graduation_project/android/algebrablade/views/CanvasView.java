@@ -27,7 +27,6 @@ public class CanvasView extends View {
     private static final int INDEX_COLOR = 0Xff000000; //坐标轴下标的颜色
     private static final int INDEX_MARGIN = 38; //坐标轴下标与坐标轴的距离
     private static final int CURVE_WIDTH = 3; //曲线宽度
-    private static final int CURVE_COLOR = 0xff00afff; //曲线颜色
     private static final float LATTICE_MAX_PIXEL = 150; //格子的最大像素值
     private static final float LATTICE_MIN_PIXEL = LATTICE_MAX_PIXEL / 2; //格子的最小像素值
     private static final float LATTICE_MAX_UNIT = 1024.1f;//一个格子最大代表的单位
@@ -47,7 +46,7 @@ public class CanvasView extends View {
     private GestureDetector mGestureDetector;
     private ScaleGestureDetector mScaleGestureDetector;
 
-    private SparseArray<float[]> mCurves = new SparseArray<>();
+    private SparseArray<Curve> mCurves = new SparseArray<>();
     private OnDomainChangeListener mOnDomainChangeListener;
 
     private boolean mIsScaleMotion = false;
@@ -179,8 +178,8 @@ public class CanvasView extends View {
         setLayerType(View.LAYER_TYPE_SOFTWARE, null);
     }
 
-    public void addLine(int key, float[] points) {
-        mCurves.put(key, points);
+    public void addLine(int key, Curve curve) {
+        mCurves.put(key, curve);
     }
 
     public void clearLines() {
@@ -355,13 +354,19 @@ public class CanvasView extends View {
     private void drawCurves(Canvas canvas) {
         mPaint.reset();
         mPaint.setStyle(Paint.Style.STROKE);
-        mPaint.setColor(CURVE_COLOR);
         mPaint.setStrokeWidth(CURVE_WIDTH);
 
+        Curve curve;
+        int size;
+        int color;
+        float[] points;
         for (int i = 0; i < mCurves.size(); i++) {
-            float[] points = mCurves.valueAt(i);
+            curve = mCurves.valueAt(i);
+            points = curve.points;
+            color = curve.color;
+            size = curve.size;
 
-            if (points.length < 4 || points.length % 2 != 0) {
+            if (size < 4 || size % 2 != 0) {
                 continue;
             }
 
@@ -369,10 +374,11 @@ public class CanvasView extends View {
             mPath.rewind();
             mPath.moveTo(logicXCoordinate2CanvasXCoordinate(points[0]),
                     logicYCoordinate2CanvasYCoordinate(points[1]));
-            for (int j = 2; j < points.length; j += 2) {
+            for (int j = 2; j < size; j += 2) {
                 mPath.lineTo(logicXCoordinate2CanvasXCoordinate(points[j]),
                         logicYCoordinate2CanvasYCoordinate(points[j + 1]));
             }
+            mPaint.setColor(color);
             canvas.drawPath(mPath, mPaint);
         }
     }
@@ -395,9 +401,21 @@ public class CanvasView extends View {
         return (float)(mCurWidth - mCurWidth / 2 - (int)mOriginPoint.x) / (int)mPixelOfLattice * mUnitOfLattice;
     }
 
+    public static class Curve {
+        public float[] points;
+        public int color;
+        public int size;
+
+
+        public Curve(float[] points, int color, int size) {
+            this.points = points;
+            this.color = color;
+            this.size = size;
+        }
+    }
 
     public interface OnDomainChangeListener {
         void onDomainChange(CanvasView view, float preStart, float preEnd,
-                            float start, float end, SparseArray<float[]> curves);
+                            float start, float end, SparseArray<Curve> curves);
     }
 }
