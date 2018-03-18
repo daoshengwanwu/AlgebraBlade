@@ -3,4 +3,5 @@
     <string name="hint_input_expression">在此输入要计算的表达式</string>
     <string name="text_calculate">计算</string>
     <string name="text_rest">结果：</string>
+    <string name="get_value">取值</string>
 </resources>

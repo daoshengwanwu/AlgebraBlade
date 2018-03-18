@@ -32,11 +32,14 @@ public class CanvasView extends View {
     private static final float LATTICE_MAX_UNIT = 1024.1f;//一个格子最大代表的单位
     private static final float LATTICE_MIN_UNIT = 0.0009999f;//一个格子最小代表的单位
     private static final float SCALE_SENSITIVITY = 5;//缩放敏感度，越小越敏感
+    private static final float INTERSECTION_SIZE = 5;//交点的大小
+    private static final float ALIGNMENT_WIDTH = 2;
+    private static final int ALIGNMENT_COLOR = 0xffaf6f1f;
 
     private int mCurWidth = -1; //当前View的宽度
     private int mCurHeight = -1; //当前View的高度
     private float mPixelOfLattice = (LATTICE_MAX_PIXEL + LATTICE_MIN_PIXEL) / 2; //默认坐标轴一格的像素
-    private float mUnitOfLattice = 2f; //默认坐标轴一格代表一个单位
+    private float mUnitOfLattice = 2f; //默认坐标轴一格代表的单位数
     private PointF mOriginPoint = new PointF(0, 0); //坐标原点相对于Canvas坐标轴的坐标
 
     private Path mPath = new Path();
@@ -49,6 +52,12 @@ public class CanvasView extends View {
     private SparseArray<Curve> mCurves = new SparseArray<>();
     private OnDomainChangeListener mOnDomainChangeListener;
 
+    private PointF mSelectLogicPoint = new PointF(0, 0);
+    private PointF mSelectRealPoint = new PointF(0, 0);
+    private SparseArray<PointF> mIntersections = new SparseArray<>();
+    private OnPointSelectListener mOnPointSelectListener;
+
+    private int mCurrentState = State.FREE;
     private boolean mIsScaleMotion = false;
 
 
@@ -190,15 +199,66 @@ public class CanvasView extends View {
         mOnDomainChangeListener = listener;
     }
 
+    public void addIntersection(int key, float x, float y) {
+        PointF point = mIntersections.get(key);
+        if (point == null) {
+            point = new PointF(x, y);
+            mIntersections.put(key, point);
+        }
+
+        point.x = x;
+        point.y = y;
+    }
+
+    public void clearIntersections() {
+        mIntersections.clear();
+    }
+
+    public void setOnPointSelectListener(OnPointSelectListener listener) {
+        mOnPointSelectListener = listener;
+    }
+
+    public void setState(int state) {
+        mCurrentState = state;
+
+        if (state == State.FREE) {
+            invalidate();
+        }
+    }
+
+    public int getState() {
+        return mCurrentState;
+    }
+
     public void refresh() {
         invalidate();
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        mScaleGestureDetector.onTouchEvent(event);
-        if (!mIsScaleMotion) {
-            mGestureDetector.onTouchEvent(event);
+        switch (mCurrentState) {
+            case State.FREE: {
+                mScaleGestureDetector.onTouchEvent(event);
+                if (!mIsScaleMotion) {
+                    mGestureDetector.onTouchEvent(event);
+                }
+
+            } break;
+
+            case State.GET_VALUE: {
+                mSelectRealPoint.x = event.getX(0);
+                mSelectRealPoint.y = event.getY(0);
+
+                motionPoint2LogicPoint(event.getX(0), event.getY(0), mSelectLogicPoint);
+
+                if (mOnPointSelectListener != null) {
+                    mOnPointSelectListener.onPointSelect(this, mSelectLogicPoint, mSelectRealPoint);
+                }
+
+                invalidate();
+            } break;
+
+            default: break;
         }
 
         return true;
@@ -227,6 +287,9 @@ public class CanvasView extends View {
         adjustCanvas(canvas);
         drawCoordinate(canvas);
         drawCurves(canvas);
+        if (mCurrentState == State.GET_VALUE) {
+            drawIntersections(canvas);
+        }
     }
 
     /**
@@ -383,6 +446,51 @@ public class CanvasView extends View {
         }
     }
 
+    private void drawIntersections(Canvas canvas) {
+        mPaint.reset();
+        mPaint.setStyle(Paint.Style.STROKE);
+        mPaint.setStrokeWidth(ALIGNMENT_WIDTH);
+        mPaint.setColor(ALIGNMENT_COLOR);
+
+        canvas.drawLine(
+                logicXCoordinate2CanvasXCoordinate(mSelectLogicPoint.x),
+                mCurHeight / 2,
+                logicXCoordinate2CanvasXCoordinate(mSelectLogicPoint.x),
+                mCurHeight / 2 - mCurHeight,
+                mPaint
+        );
+
+        int key;
+        int color;
+        int x, y;
+        PointF point;
+        String disStr;
+        mPaint.reset();
+        for (int i = 0; i < mIntersections.size(); i++) {
+            key = mIntersections.keyAt(i);
+            point = mIntersections.valueAt(i);
+            color = mCurves.get(key).color;
+            mPaint.setColor(color);
+
+            x = logicXCoordinate2CanvasXCoordinate(point.x);
+            y = logicYCoordinate2CanvasYCoordinate(point.y);
+
+            mPaint.setStyle(Paint.Style.STROKE);
+            mPaint.setStrokeWidth(10);
+            canvas.drawPoint(x, y, mPaint);
+
+            disStr = "#" + key;
+            mPaint.setStyle(Paint.Style.FILL);
+            mPaint.setTextSize(36);
+            mPaint.getTextBounds(disStr, 0, disStr.length(), mTextBounds);
+
+            canvas.save();
+            canvas.scale(1, -1);
+            canvas.drawText(disStr, x + 10, mTextBounds.height() / 2 - y, mPaint);
+            canvas.restore();
+        }
+    }
+
     private int logicXCoordinate2CanvasXCoordinate(double logicXCoordinate) {
         int logicPixelXCoordinate = (int)(logicXCoordinate / mUnitOfLattice * (int)mPixelOfLattice);
         return logicPixelXCoordinate + (int)mOriginPoint.x;
@@ -393,6 +501,21 @@ public class CanvasView extends View {
         return logicPixelYCoordinate + (int)mOriginPoint.y;
     }
 
+    private PointF motionPoint2LogicPoint(float motionX, float motionY) {
+        PointF rst = new PointF();
+        motionPoint2LogicPoint(motionX, motionY, rst);
+        return rst;
+    }
+
+    private void motionPoint2LogicPoint(float motionX, float motionY, PointF outPoint) {
+        if (outPoint == null) {
+            return;
+        }
+
+        outPoint.x = (motionX - mCurWidth / 2 - mOriginPoint.x) / mPixelOfLattice * mUnitOfLattice;
+        outPoint.y = (mCurHeight / 2 - motionY - mOriginPoint.y) / mPixelOfLattice * mUnitOfLattice;
+    }
+
     private float getCurrentDomainStart() {
         return (float)(-mCurWidth / 2 - (int)mOriginPoint.x) / (int)mPixelOfLattice * mUnitOfLattice;
     }
@@ -400,6 +523,7 @@ public class CanvasView extends View {
     private float getCurrentDomainEnd() {
         return (float)(mCurWidth - mCurWidth / 2 - (int)mOriginPoint.x) / (int)mPixelOfLattice * mUnitOfLattice;
     }
+
 
     public static class Curve {
         public float[] points;
@@ -414,8 +538,17 @@ public class CanvasView extends View {
         }
     }
 
+    public static class State {
+        public static final int FREE = 0x00000000;
+        public static final int GET_VALUE = 0x00000001;
+    }
+
     public interface OnDomainChangeListener {
         void onDomainChange(CanvasView view, float preStart, float preEnd,
                             float start, float end, SparseArray<Curve> curves);
+    }
+
+    public interface OnPointSelectListener {
+        void onPointSelect(CanvasView view, PointF selectLogicPoint, PointF selectRealPoint);
     }
 }

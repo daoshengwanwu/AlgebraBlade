@@ -117,6 +117,10 @@ public class Variable extends ExpItem {
         mCurValue = mLowerLimit;
     }
 
+    public void setCurValue(double curValue) {
+        mCurValue = curValue;
+    }
+
     @Override
     public String toString() {
         return mFlagStr;
