@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+
+    tools:context="com.graduation_project.android.algebrablade.LauncherActivity">
+    <!--top-->
+    <LinearLayout
+        android:id="@+id/banner"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@color/colorBanner"
+        android:orientation="horizontal">
+
+        <Spinner
+            android:id="@+id/spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="10"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/enter_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Enter" />
+
+        <ListView
+            android:id="@+id/lv_calc"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+
+    </LinearLayout>
+    <!-- 是用xml自定义键盘样式 使用KeyboardView键盘控件存放定义的键盘布局 -->
+    <include layout="@layout/key_board" />
+
+
+</LinearLayout>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    android:layout_weight="5">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <!--&lt;!&ndash;滑块&ndash;&gt;-->
+        <ImageView
+            android:id="@+id/img_cursor"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:scaleType="matrix"
+            android:src="@mipmap/line"/>
+
+        <!--viewpage-->
+        <android.support.v4.view.ViewPager
+            android:id="@+id/vpager_kb"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:flipInterval="30"
+            android:persistentDrawingCache="animation" />
+    </LinearLayout>
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+
+
+
+
+</FrameLayout>
