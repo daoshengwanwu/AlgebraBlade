@@ -7,4 +7,10 @@
         android:title="取值"
         android:icon="@drawable/ic_get_value"
         app:showAsAction="ifRoom|withText"/>
+
+    <item
+        android:id="@+id/reset"
+        android:title="重置"
+        android:icon="@drawable/ic_reset"
+        app:showAsAction="ifRoom|withText" />
 </menu>

@@ -234,6 +234,21 @@ public class CanvasView extends View {
         invalidate();
     }
 
+    public void reset() {
+        float preDomainStart = getCurrentDomainStart();
+        float preDomainEnd = getCurrentDomainEnd();
+
+        mPixelOfLattice = (LATTICE_MAX_PIXEL + LATTICE_MIN_PIXEL) / 2; //默认坐标轴一格的像素
+        mUnitOfLattice = 2f; //默认坐标轴一格代表的单位数
+        mOriginPoint.x = mOriginPoint.y = 0;
+
+        if (mOnDomainChangeListener != null) {
+            mOnDomainChangeListener.onDomainChange(this, preDomainStart, preDomainEnd,
+                    getCurrentDomainStart(), getCurrentDomainEnd(), mCurves);
+        }
+        invalidate();
+    }
+
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         switch (mCurrentState) {

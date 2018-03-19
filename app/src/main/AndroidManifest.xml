@@ -18,7 +18,8 @@
         </activity>
 
         <!--为了测试先将GraphicActivity设置为启动Activity-->
-        <activity android:name=".GraphicActivity">
+        <activity android:name=".GraphicActivity"
+            android:parentActivityName=".LauncherActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

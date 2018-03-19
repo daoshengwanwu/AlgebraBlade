@@ -144,14 +144,24 @@ public class GraphicActivity extends AppCompatActivity {
             case R.id.get_value: {
                 if (mCanvasView.getState() == CanvasView.State.FREE) {
                     mCanvasView.setState(CanvasView.State.GET_VALUE);
+                    item.setIcon(R.drawable.ic_get_value_no_point);
                 } else if (mCanvasView.getState() == CanvasView.State.GET_VALUE) {
                     mCanvasView.setState(CanvasView.State.FREE);
+                    item.setIcon(R.drawable.ic_get_value);
 
                     if (mCurValDisTV != null) {
                         mCurValDisTV.setVisibility(View.GONE);
                         mCurValDisTV = null;
                     }
                 }
+            } break;
+
+            case R.id.reset: {
+                mCanvasView.reset();
+            } break;
+
+            case android.R.id.home: {
+                finish();
             } break;
 
             default: break;
