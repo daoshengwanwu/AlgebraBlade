@@ -30,12 +30,6 @@
         android:layout_weight="10"
         android:orientation="vertical">
 
-        <Button
-            android:id="@+id/enter_btn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Enter" />
-
         <ListView
             android:id="@+id/lv_calc"
             android:layout_width="match_parent"

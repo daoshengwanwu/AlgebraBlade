@@ -6,6 +6,60 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <!--取消默认大写-->
+        <item name="android:textAllCaps">false</item>
     </style>
+    <style name="btn_input_amount_style">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">#333333</item>
+        <item name="android:background">#EEC900</item>
+        <item name="android:layout_marginBottom">1dp</item>
+    </style>
+    <style name="btn_number_style">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">#333333</item>
+        <item name="android:background">#EEB422</item>
+        <item name="android:layout_marginBottom">1dp</item>
+    </style>
+    <style name="btn_enter_style">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">#333333</item>
+        <item name="android:background">#EE4000</item>
+        <item name="android:layout_marginBottom">1dp</item>
+    </style>
+    <style name="layout_input_amount_style">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_marginBottom">1dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:orientation">horizontal</item>
+    </style>
+    <!--键盘每列style-->
+    <style name="key_col_style1">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_marginRight">1dp</item>
+        <item name="android:orientation">vertical</item>
+
+    </style>
+    <!--键盘最后一列style-->
+    <style name="key_col_style2">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:orientation">vertical</item>
+    </style>
+
 
 </resources>

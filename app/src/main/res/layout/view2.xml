@@ -1,175 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TableLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@drawable/keyboardbg">
-    <TableRow>
-        <Button
-            android:layout_height="wrap_content"
-            android:layout_width="0dp"
-            android:layout_weight="1"
+    android:layout_height="400dp"
+    android:background="#c8cbcc">
+    <!--第一列-->
+    <LinearLayout style="@style/key_col_style1">
+        <Button style="@style/btn_input_amount_style"
             android:text="√"/>
-        <Button
-            android:layout_height="wrap_content"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:text="←"/>
-        <Button
-            android:layout_height="wrap_content"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:text="→"/>
-        <Button
-            android:layout_height="wrap_content"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:text="("/>
-        <Button
-            android:layout_height="wrap_content"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:text=")"/>
-
-    </TableRow>
-    <TableRow>
-        <Button
-            android:layout_height="wrap_content"
-            android:layout_width="0dp"
-            android:layout_weight="1"
+        <Button style="@style/btn_input_amount_style"
             android:text="X²"/>
-        <Button
-            android:layout_height="wrap_content"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:text="sin"/>
-        <Button
-            android:layout_height="wrap_content"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:text="cos"/>
-        <Button
-            android:layout_height="wrap_content"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:text="^"/>
-        <Button
-            android:layout_height="wrap_content"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:text="π"/>
+        <Button style="@style/btn_number_style"
 
-    </TableRow>
-    <TableRow>
-        <Button
-            android:layout_height="wrap_content"
-            android:layout_width="0dp"
-            android:layout_weight="1"
             android:text="7"/>
-        <Button
-            android:layout_height="wrap_content"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:text="8"/>
-        <Button
-            android:layout_height="wrap_content"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:text="9"/>
-        <Button
-            android:layout_height="wrap_content"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:text="/"/>
-        <Button
-            android:layout_height="wrap_content"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:text="Ans"/>
-
-    </TableRow>
-    <TableRow>
-        <Button
-            android:layout_height="wrap_content"
-            android:layout_width="0dp"
-            android:layout_weight="1"
+        <Button style="@style/btn_number_style"
             android:text="4"/>
-        <Button
-            android:layout_height="wrap_content"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:text="5"/>
-        <Button
-            android:layout_height="wrap_content"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:text="6"/>
-        <Button
-            android:layout_height="wrap_content"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:text="*"/>
-        <Button
-            android:layout_height="wrap_content"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            />
-
-    </TableRow>
-    <TableRow>
-        <Button
-            android:layout_height="wrap_content"
-            android:layout_width="0dp"
-            android:layout_weight="1"
+        <Button style="@style/btn_number_style"
             android:text="1"/>
-        <Button
-            android:layout_height="wrap_content"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:text="2"/>
-        <Button
-            android:layout_height="wrap_content"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:text="3"/>
-        <Button
-            android:layout_height="wrap_content"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:text="+"/>
-        <LinearLayout
-            android:layout_height="wrap_content"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:text=""/>
-    </TableRow>
-    <TableRow>
-        <Button
-            android:layout_height="wrap_content"
-            android:layout_width="0dp"
-            android:layout_weight="1"
+        <Button style="@style/btn_number_style"
             android:text="0"/>
-        <Button
-            android:layout_height="wrap_content"
-            android:layout_width="0dp"
-            android:layout_weight="1"
+    </LinearLayout>
+
+    <LinearLayout style="@style/key_col_style1">
+        <Button style="@style/btn_input_amount_style"
+            android:text="←"/>
+        <Button style="@style/btn_input_amount_style"
+            android:text="sin"/>
+        <Button style="@style/btn_number_style"
+            android:text="8"/>
+        <Button style="@style/btn_number_style"
+            android:text="5"/>
+        <Button style="@style/btn_number_style"
+            android:text="2"/>
+        <Button style="@style/btn_number_style"
             android:text="."/>
-        <Button
-            android:layout_height="wrap_content"
-            android:layout_width="0dp"
-            android:layout_weight="1"
+
+    </LinearLayout>
+    <LinearLayout style="@style/key_col_style1">
+        <Button style="@style/btn_input_amount_style"
+            android:text="→"/>
+        <Button style="@style/btn_input_amount_style"
+            android:text="cos"/>
+        <Button style="@style/btn_number_style"
+            android:text="9"/>
+        <Button style="@style/btn_number_style"
+            android:text="6"/>
+        <Button style="@style/btn_number_style"
+            android:text="3"/>
+        <Button style="@style/btn_number_style"
             android:text="E"/>
-        <Button
-            android:layout_height="wrap_content"
-            android:layout_width="0dp"
-            android:layout_weight="1"
+
+    </LinearLayout>
+    <LinearLayout style="@style/key_col_style1">
+        <Button style="@style/btn_input_amount_style"
+            android:text="("/>
+        <Button style="@style/btn_input_amount_style"
+            android:text="^"/>
+        <Button style="@style/btn_input_amount_style"
+            android:text="/"/>
+        <Button style="@style/btn_input_amount_style"
+            android:text="*"/>
+        <Button style="@style/btn_input_amount_style"
+            android:text="+"/>
+        <Button style="@style/btn_input_amount_style"
             android:text="-"/>
-        <LinearLayout
-            android:layout_height="wrap_content"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:text=""/>
+    </LinearLayout>
+    <!--最后一列-->
+    <LinearLayout style="@style/key_col_style2">
+        <Button style="@style/btn_input_amount_style"
+            android:text=")"/>
+        <Button style="@style/btn_input_amount_style"
+            android:text="π"/>
+        <Button style="@style/btn_input_amount_style"
+            android:text="Ans"/>
+        <ImageButton style="@style/btn_enter_style"
+            android:id="@+id/enter_btn"
+            android:layout_weight="3"
+            android:layout_marginTop="1dp"
+            android:src="@mipmap/enter"/>
 
-    </TableRow>
+    </LinearLayout>
 
-</TableLayout>
+</LinearLayout>

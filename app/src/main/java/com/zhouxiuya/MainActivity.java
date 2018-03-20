@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Spinner;
 
@@ -30,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
     private ListView lv_calc;
     private ArrayList<Calculation> cal_clist = new ArrayList<Calculation>();
     private Calc_ListViewAdapter calc_adapter;
-    private Button enter_btn;
+    private ImageButton enter_btn;
     //viewpager
     private ViewPager vpager_kb;
     private ArrayList<View> vpagers;
@@ -45,13 +46,7 @@ public class MainActivity extends AppCompatActivity {
         //listview
 
         initCalcList();//初始化数据
-        enter_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                calc_adapter.addItem();
-                calc_adapter.notifyDataSetChanged();
-            }
-        });
+
 
         initViewpager();
     }
@@ -66,6 +61,14 @@ public class MainActivity extends AppCompatActivity {
         vpagers.add(view1);
         vpagers.add(view2);
         vpagers.add(view3);
+        enter_btn = (ImageButton) view2.findViewById(R.id.enter_btn);
+        enter_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                calc_adapter.addItem();
+                calc_adapter.notifyDataSetChanged();
+            }
+        });
         myAdapter=new KeyboardpagerAdapter(vpagers);
         vpager_kb.setAdapter(myAdapter);
 
@@ -73,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void initCalcList() {
         lv_calc = (ListView) findViewById(R.id.lv_calc);
-        enter_btn = (Button) findViewById(R.id.enter_btn);
+
         calc_adapter = new Calc_ListViewAdapter(this, cal_clist);
         lv_calc = (ListView) findViewById(R.id.lv_calc);
         lv_calc.setAdapter(calc_adapter);
