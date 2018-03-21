@@ -75,8 +75,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initCalcList() {
-        lv_calc = (ListView) findViewById(R.id.lv_calc);
-
         calc_adapter = new Calc_ListViewAdapter(this, cal_clist);
         lv_calc = (ListView) findViewById(R.id.lv_calc);
         lv_calc.setAdapter(calc_adapter);

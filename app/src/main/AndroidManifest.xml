@@ -10,6 +10,15 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".LauncherActivity">
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.MAIN" />-->
+
+                <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            <!--</intent-filter>-->
+        </activity>
+
+        <!--为了测试先将这个Activity设置为启动Activity-->
+        <activity android:name="com.zhouxiuya.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

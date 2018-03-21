@@ -1,7 +1,9 @@
 package com.zhouxiuya.adapter;
 
 import android.content.Context;
+import android.text.Editable;
 import android.text.InputType;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,9 +30,6 @@ public class Calc_ListViewAdapter extends BaseAdapter{
         context=mcontext;
         calculations=mcalculations;
     }
-    public void notifyDataSetChanged() {
-        super.notifyDataSetChanged();
-    }
     @Override
     public int getCount() {
         return calculations.size();
@@ -48,13 +47,30 @@ public class Calc_ListViewAdapter extends BaseAdapter{
 
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
-
         view= LayoutInflater.from(context).inflate(R.layout.calc_item,null);
 
+        final Calculation data = calculations.get(i);
         EditText calc_in=(EditText)view.findViewById(R.id.et_calcin);
         TextView calc_out=(TextView)view.findViewById(R.id.tv_calcout);
-        calc_in.setHint(calculations.get(i).getCalc_in());
-        calc_out.setText(calculations.get(i).getCalc_out());
+        calc_in.setHint(data.getCalc_in());
+        calc_out.setText(data.getCalc_out());
+        calc_in.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                data.setCalc_in(charSequence.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
         return view;
     }
     //添加item数据
@@ -74,6 +90,4 @@ public class Calc_ListViewAdapter extends BaseAdapter{
         editText=(EditText)LayoutInflater.from(context).inflate(R.layout.calc_item,null).findViewById(R.id.et_calcin);
         editText.setInputType(InputType.TYPE_NULL);
     }
-
-
 }
