@@ -13,8 +13,8 @@ public class VariableAssistant {
     private Map<String, Variable> mVariablesMap = new LinkedHashMap<>();
 
 
-    public VariableAssistant addVariable(String flagStr, double lowerLimit, boolean isLowerOpen
-            , double upperLimit, boolean isUpperOpen, double span) {
+    public VariableAssistant addVariable(String flagStr, double lowerLimit, boolean isLowerOpen,
+                                         double upperLimit, boolean isUpperOpen, double span) {
 
         if (OperatorAssistant.isIdentifierAlreadyExist(flagStr) ||
                 Operand.hasConstant(flagStr) || hasVariable(flagStr)) {

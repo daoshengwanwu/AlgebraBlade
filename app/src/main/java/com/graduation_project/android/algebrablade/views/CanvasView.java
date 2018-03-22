@@ -39,7 +39,7 @@ public class CanvasView extends View {
     private int mCurWidth = -1; //当前View的宽度
     private int mCurHeight = -1; //当前View的高度
     private float mPixelOfLattice = (LATTICE_MAX_PIXEL + LATTICE_MIN_PIXEL) / 2; //默认坐标轴一格的像素
-    private float mUnitOfLattice = 2f; //默认坐标轴一格代表的单位数
+    private float mUnitOfLattice = 1f; //默认坐标轴一格代表的单位数
     private PointF mOriginPoint = new PointF(0, 0); //坐标原点相对于Canvas坐标轴的坐标
 
     private Path mPath = new Path();
@@ -239,7 +239,7 @@ public class CanvasView extends View {
         float preDomainEnd = getCurrentDomainEnd();
 
         mPixelOfLattice = (LATTICE_MAX_PIXEL + LATTICE_MIN_PIXEL) / 2; //默认坐标轴一格的像素
-        mUnitOfLattice = 2f; //默认坐标轴一格代表的单位数
+        mUnitOfLattice = 1f; //默认坐标轴一格代表的单位数
         mOriginPoint.x = mOriginPoint.y = 0;
 
         if (mOnDomainChangeListener != null) {
@@ -545,6 +545,8 @@ public class CanvasView extends View {
         public int color;
         public int size;
 
+
+        public Curve() { }
 
         public Curve(float[] points, int color, int size) {
             this.points = points;

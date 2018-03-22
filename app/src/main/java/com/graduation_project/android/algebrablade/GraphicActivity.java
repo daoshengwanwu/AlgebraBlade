@@ -64,16 +64,12 @@ public class GraphicActivity extends AppCompatActivity {
 
                 int key = -1;
                 ResultSource resultSource = null;
-                float[] pointsContainer = null;
                 Variable variable = null;
-                Curve curve = null;
+                Curve recycleCurve = null;
 
-                view.clearLines();
                 for (int i = 0; i < mResultSourceSparseArray.size(); i++) {
                     key = mResultSourceSparseArray.keyAt(i);
                     resultSource = mResultSourceSparseArray.valueAt(i);
-                    curve = curves.get(key);
-                    pointsContainer = curve != null ? curve.points : null;
                     variable = resultSource.resultGenerator.getVarAriExp().
                             getVariableAssistant().getVariable("x");
 
@@ -84,7 +80,8 @@ public class GraphicActivity extends AppCompatActivity {
                         throw new VariableNotSetException();
                     }
 
-                    view.addLine(key, getCurveFromResultSource(resultSource, pointsContainer));
+                    recycleCurve = curves.get(key);
+                    view.addLine(key, getCurveFromResultSource(resultSource, recycleCurve));
                 }
             }
         });
@@ -170,16 +167,20 @@ public class GraphicActivity extends AppCompatActivity {
         return true;
     }
 
-    private Curve getCurveFromResultSource(ResultSource resultSource, float[] pointsContainer) {
+    private Curve getCurveFromResultSource(ResultSource resultSource, Curve recycleCurve) {
         Calculator.ResultGenerator resultGenerator = resultSource.resultGenerator;
 
         VarAriExp varAriExp = resultGenerator.getVarAriExp();
         Variable x = varAriExp.getVariableAssistant().getVariable("x");
         x.reset();
 
+        if (recycleCurve == null) {
+            recycleCurve = new Curve();
+        }
+        float[] points = recycleCurve.points != null && recycleCurve.points.length >= x.size() * 2 ?
+                recycleCurve.points : new float[x.size() * 2 + 32];
+
         int i = 0;
-        float[] points = pointsContainer != null && pointsContainer.length == x.size() * 2 ?
-                pointsContainer : new float[x.size() * 2];
         points[i++] = (float)x.curValue();
         points[i++] = (float)resultGenerator.curValue();
 
@@ -188,7 +189,11 @@ public class GraphicActivity extends AppCompatActivity {
             points[i++] = (float)resultGenerator.curValue();
         }
 
-        return new Curve(points, resultSource.color, i);
+        recycleCurve.points = points;
+        recycleCurve.color = resultSource.color;
+        recycleCurve.size = i;
+
+        return recycleCurve;
     }
 
     private void updateResultGeneratorsFromCurveSourceLab() {
