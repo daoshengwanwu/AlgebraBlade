@@ -23,15 +23,12 @@ import java.util.List;
  */
 
 public class MainActivity extends AppCompatActivity {
-    //首页功能选项弹框
-    private Spinner spinner;
-    private List<String> func_list;
     private ArrayAdapter<String> arr_adapter;
     //listview 满足多个式子计算
     private ListView lv_calc;
     private ArrayList<Calculation> cal_clist = new ArrayList<Calculation>();
     private Calc_ListViewAdapter calc_adapter;
-    private ImageButton enter_btn;
+    private Button enter_btn;
     //viewpager
     private ViewPager vpager_kb;
     private ArrayList<View> vpagers;
@@ -42,7 +39,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         //初始化首页功能选项弹框
-        initSpinner();
         //listview
 
         initCalcList();//初始化数据
@@ -61,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
         vpagers.add(view1);
         vpagers.add(view2);
         vpagers.add(view3);
-        enter_btn = (ImageButton) view2.findViewById(R.id.enter_btn);
+        enter_btn = (Button) view2.findViewById(R.id.enter_btn);
         enter_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -82,21 +78,5 @@ public class MainActivity extends AppCompatActivity {
         calc_adapter.notifyDataSetChanged();
     }
 
-    //初始化首页功能选项弹框
-    private void initSpinner() {
-        spinner = (Spinner) findViewById(R.id.spinner);
-        //数据
-        func_list = new ArrayList<String>();
-        func_list.add("计算");
-        func_list.add("函数转图表");
-        func_list.add("图表转函数");
 
-        //适配器
-        arr_adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, func_list);
-        //设置样式
-        arr_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        //加载适配器
-        spinner.setAdapter(arr_adapter);
-
-    }
 }

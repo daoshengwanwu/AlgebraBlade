@@ -76,7 +76,7 @@ public class Calc_ListViewAdapter extends BaseAdapter{
     //添加item数据
     public void addItem(){
         if (calculations!=null){
-            calculations.add(new Calculation(getCount(),"输入算式"+getCount(),"0"));
+            calculations.add(new Calculation(getCount(),"输入算式","0"));
         }
     }
     //删除item数据

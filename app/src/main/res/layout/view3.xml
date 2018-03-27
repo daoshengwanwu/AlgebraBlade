@@ -1,115 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TableLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <TableRow>
-        <Button
-            android:layout_height="wrap_content"
-            android:layout_width="0dp"
-            android:layout_weight="1"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/view_style">
+    <!--第一列-->
+    <LinearLayout style="@style/key_col_style1">
+        <Button style="@style/btn_blue_style"
             android:text="sin"/>
-        <Button
-            android:layout_height="wrap_content"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:text="cos"/>
-        <Button
-            android:layout_height="wrap_content"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:text="tan"/>
-        <Button
-            android:layout_height="wrap_content"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:text="abs"/>
-        <Button
-            android:layout_height="wrap_content"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:text="floor"/>
-
-    </TableRow>
-    <TableRow>
-        <Button
-            android:layout_height="wrap_content"
-            android:layout_width="0dp"
-            android:layout_weight="1"
+        <Button style="@style/btn_blue_style"
             android:text="arcsin"/>
-        <Button
-            android:layout_height="wrap_content"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:text="arccos"/>
-        <Button
-            android:layout_height="wrap_content"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:text="arctan"/>
-        <Button
-            android:layout_height="wrap_content"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:text="g"/>
-        <Button
-            android:layout_height="wrap_content"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:text="frac"/>
+        <Button style="@style/btn_blue_style"
 
-    </TableRow>
-    <TableRow>
-        <Button
-            android:layout_height="wrap_content"
-            android:layout_width="0dp"
-            android:layout_weight="1"
             android:text="sinh"/>
-        <Button
-            android:layout_height="wrap_content"
-            android:layout_width="0dp"
-            android:layout_weight="1"
+        <Button style="@style/btn_blue_style"
+            android:text="arcsinh"/>
+
+
+    </LinearLayout>
+
+    <LinearLayout style="@style/key_col_style1">
+        <Button style="@style/btn_blue_style"
+            android:text="cos"/>
+        <Button style="@style/btn_blue_style"
+            android:text="arccos"/>
+        <Button style="@style/btn_blue_style"
+
             android:text="cosh"/>
-        <Button
-            android:layout_height="wrap_content"
-            android:layout_width="0dp"
-            android:layout_weight="1"
+        <Button style="@style/btn_blue_style"
+            android:text="arccosh"/>
+
+    </LinearLayout>
+
+    <LinearLayout style="@style/key_col_style1">
+        <Button style="@style/btn_blue_style"
+            android:text="tan"/>
+        <Button style="@style/btn_blue_style"
+            android:text="arctan"/>
+        <Button style="@style/btn_blue_style"
+
             android:text="tanh"/>
-        <Button
-            android:layout_height="wrap_content"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:text="nCr"/>
-        <Button
-            android:layout_height="wrap_content"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:text="nPr"/>
+        <Button style="@style/btn_blue_style"
+            android:text="arctanh"/>
 
-    </TableRow>
-    <TableRow>
-        <Button
-            android:layout_height="wrap_content"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:text="arsinh"/>
-        <Button
-            android:layout_height="wrap_content"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:text="arcosh"/>
-        <Button
-            android:layout_height="wrap_content"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:text="artanh"/>
+
+    </LinearLayout>
+    <LinearLayout style="@style/key_col_style1">
+        <Button style="@style/btn_blue_style"
+            android:text="abs"/>
+        <Button style="@style/btn_blue_style"
+            android:text="g"/>
         <LinearLayout
-            android:layout_height="wrap_content"
-            android:layout_width="0dp"
-            android:layout_weight="2"
-            android:text=""/>
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="2">
+        </LinearLayout>
+    </LinearLayout>
 
-    </TableRow>
 
+    <!--最后一列-->
+    <LinearLayout style="@style/key_col_style2">
+        <Button style="@style/btn_blue_style"
+            android:text="floor"/>
+        <Button style="@style/btn_blue_style"
+            android:text="frac"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="2">
+        </LinearLayout>
+    </LinearLayout>
 
-</TableLayout>
+</LinearLayout>

@@ -1,83 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal"
-    android:layout_width="match_parent"
-    android:layout_height="400dp"
-    android:background="#c8cbcc">
+    style="@style/view_style">
     <!--第一列-->
     <LinearLayout style="@style/key_col_style1">
-        <Button style="@style/btn_input_amount_style"
+        <Button style="@style/btn_blue_style"
             android:text="√"/>
-        <Button style="@style/btn_input_amount_style"
+        <Button style="@style/btn_blue_style"
             android:text="X²"/>
-        <Button style="@style/btn_number_style"
+        <Button style="@style/btn_gray_style"
 
             android:text="7"/>
-        <Button style="@style/btn_number_style"
+        <Button style="@style/btn_gray_style"
             android:text="4"/>
-        <Button style="@style/btn_number_style"
+        <Button style="@style/btn_gray_style"
             android:text="1"/>
-        <Button style="@style/btn_number_style"
+        <Button style="@style/btn_gray_style"
             android:text="0"/>
     </LinearLayout>
 
     <LinearLayout style="@style/key_col_style1">
-        <Button style="@style/btn_input_amount_style"
+        <Button style="@style/btn_blue_style"
             android:text="←"/>
-        <Button style="@style/btn_input_amount_style"
+        <Button style="@style/btn_blue_style"
             android:text="sin"/>
-        <Button style="@style/btn_number_style"
+        <Button style="@style/btn_gray_style"
             android:text="8"/>
-        <Button style="@style/btn_number_style"
+        <Button style="@style/btn_gray_style"
             android:text="5"/>
-        <Button style="@style/btn_number_style"
+        <Button style="@style/btn_gray_style"
             android:text="2"/>
-        <Button style="@style/btn_number_style"
+        <Button style="@style/btn_gray_style"
             android:text="."/>
 
     </LinearLayout>
     <LinearLayout style="@style/key_col_style1">
-        <Button style="@style/btn_input_amount_style"
+        <Button style="@style/btn_blue_style"
             android:text="→"/>
-        <Button style="@style/btn_input_amount_style"
+        <Button style="@style/btn_blue_style"
             android:text="cos"/>
-        <Button style="@style/btn_number_style"
+        <Button style="@style/btn_gray_style"
             android:text="9"/>
-        <Button style="@style/btn_number_style"
+        <Button style="@style/btn_gray_style"
             android:text="6"/>
-        <Button style="@style/btn_number_style"
+        <Button style="@style/btn_gray_style"
             android:text="3"/>
-        <Button style="@style/btn_number_style"
+        <Button style="@style/btn_blue_style"
             android:text="E"/>
 
     </LinearLayout>
     <LinearLayout style="@style/key_col_style1">
-        <Button style="@style/btn_input_amount_style"
+        <Button style="@style/btn_blue_style"
             android:text="("/>
-        <Button style="@style/btn_input_amount_style"
+        <Button style="@style/btn_blue_style"
             android:text="^"/>
-        <Button style="@style/btn_input_amount_style"
+        <Button style="@style/btn_blue_style"
             android:text="/"/>
-        <Button style="@style/btn_input_amount_style"
+        <Button style="@style/btn_blue_style"
             android:text="*"/>
-        <Button style="@style/btn_input_amount_style"
+        <Button style="@style/btn_blue_style"
             android:text="+"/>
-        <Button style="@style/btn_input_amount_style"
+        <Button style="@style/btn_blue_style"
             android:text="-"/>
     </LinearLayout>
     <!--最后一列-->
     <LinearLayout style="@style/key_col_style2">
-        <Button style="@style/btn_input_amount_style"
+        <Button style="@style/btn_blue_style"
             android:text=")"/>
-        <Button style="@style/btn_input_amount_style"
+        <Button style="@style/btn_blue_style"
             android:text="π"/>
-        <Button style="@style/btn_input_amount_style"
+        <Button style="@style/btn_origin_style"
             android:text="Ans"/>
-        <ImageButton style="@style/btn_enter_style"
+        <Button style="@style/btn_origin_style"
+            android:text="Del"/>
+        <Button style="@style/btn_origin_style"
             android:id="@+id/enter_btn"
-            android:layout_weight="3"
-            android:layout_marginTop="1dp"
-            android:src="@mipmap/enter"/>
+            android:layout_weight="2"
+            android:text="OK" />
 
     </LinearLayout>
 
