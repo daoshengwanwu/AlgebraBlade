@@ -4,13 +4,16 @@
     <!--第一列-->
     <LinearLayout style="@style/key_col_style1">
         <Button style="@style/btn_blue_style"
+            android:id="@+id/btn_sin"
             android:text="sin"/>
         <Button style="@style/btn_blue_style"
+            android:id="@+id/btn_arcsin"
             android:text="arcsin"/>
         <Button style="@style/btn_blue_style"
-
+            android:id="@+id/btn_sinh"
             android:text="sinh"/>
         <Button style="@style/btn_blue_style"
+            android:id="@+id/btn_arcsinh"
             android:text="arcsinh"/>
 
 
@@ -18,34 +21,42 @@
 
     <LinearLayout style="@style/key_col_style1">
         <Button style="@style/btn_blue_style"
+            android:id="@+id/btn_cos"
             android:text="cos"/>
         <Button style="@style/btn_blue_style"
+            android:id="@+id/btn_arccos"
             android:text="arccos"/>
         <Button style="@style/btn_blue_style"
-
+            android:id="@+id/btn_cosh"
             android:text="cosh"/>
         <Button style="@style/btn_blue_style"
+            android:id="@+id/btn_arccosh"
             android:text="arccosh"/>
 
     </LinearLayout>
 
     <LinearLayout style="@style/key_col_style1">
         <Button style="@style/btn_blue_style"
+            android:id="@+id/btn_tan"
             android:text="tan"/>
         <Button style="@style/btn_blue_style"
+            android:id="@+id/btn_arctan"
             android:text="arctan"/>
         <Button style="@style/btn_blue_style"
-
+            android:id="@+id/btn_tanh"
             android:text="tanh"/>
         <Button style="@style/btn_blue_style"
+            android:id="@+id/btn_arctanh"
             android:text="arctanh"/>
 
 
     </LinearLayout>
     <LinearLayout style="@style/key_col_style1">
         <Button style="@style/btn_blue_style"
+            android:id="@+id/btn_abs"
             android:text="abs"/>
         <Button style="@style/btn_blue_style"
+            android:id="@+id/btn_g"
             android:text="g"/>
         <LinearLayout
             android:layout_width="match_parent"
@@ -58,8 +69,10 @@
     <!--最后一列-->
     <LinearLayout style="@style/key_col_style2">
         <Button style="@style/btn_blue_style"
+            android:id="@+id/btn_floor"
             android:text="floor"/>
         <Button style="@style/btn_blue_style"
+            android:id="@+id/btn_frac"
             android:text="frac"/>
         <LinearLayout
             android:layout_width="match_parent"

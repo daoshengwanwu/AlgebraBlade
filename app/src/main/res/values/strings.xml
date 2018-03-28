@@ -3,4 +3,7 @@
     <string name="hint_input_expression">在此输入要计算的表达式</string>
     <string name="text_calculate">计算</string>
     <string name="text_rest">结果：</string>
+    <string name="action_clear">clear history</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
 </resources>

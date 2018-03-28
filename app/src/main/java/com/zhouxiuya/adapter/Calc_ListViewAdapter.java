@@ -76,7 +76,7 @@ public class Calc_ListViewAdapter extends BaseAdapter{
     //添加item数据
     public void addItem(){
         if (calculations!=null){
-            calculations.add(new Calculation(getCount(),"输入算式","0"));
+            calculations.add(new Calculation(getCount(),"",""));
         }
     }
     //删除item数据
@@ -84,6 +84,14 @@ public class Calc_ListViewAdapter extends BaseAdapter{
         if(calculations!=null&&calculations.size()>1){
             calculations.remove(calculations.size()-1);
         }
+    }
+    //清空listview
+    public void clearListview(){
+        while (calculations!=null&&calculations.size()>1){
+            calculations.remove(calculations.size()-1);
+        }
+        calculations.get(0).setCalc_in("");
+        calculations.get(0).setCalc_out("");
     }
     //关闭软键盘
     public void closeKeyboard(){
