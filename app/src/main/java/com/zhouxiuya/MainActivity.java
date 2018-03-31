@@ -15,14 +15,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
-
 import com.graduation_project.android.algebrablade.R;
 import com.zhouxiuya.adapter.Calc_ListViewAdapter;
 import com.zhouxiuya.adapter.KeyboardpagerAdapter;
 import com.zhouxiuya.util.Calculation;
-
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,28 +41,29 @@ public class MainActivity extends AppCompatActivity
     private ArrayList<View> vpagers;
     private KeyboardpagerAdapter myAdapter;
     private Button btn_ok;
+    private List<ImageView> mDots;//定义一个集合存储三个dot
+    private int oldPosition;//记录当前点的位置。
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         //listview
-
         initCalcList();//初始化数据
-//        enter_btn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                calc_adapter.addItem();
-//                calc_adapter.notifyDataSetChanged();
-//            }
-//        });
-
+        //初始化viewpager
         initViewpager();
+        //按home键之后退回到桌面，在次点击程序图标避免再次重新启动程序
         if (!isTaskRoot()) {
             finish();
             return;
         }
+        //初始化侧滑菜单
+        initDrawerlayout();
 
+    }
+
+    //初始化侧滑菜单
+    public void initDrawerlayout(){
         //侧滑菜单
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -73,12 +72,10 @@ public class MainActivity extends AppCompatActivity
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
-
+        //左侧菜单menu设置监听
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
     }
-
     //初始化键盘viewpager
     private void initViewpager() {
         vpager_kb = (ViewPager) findViewById(R.id.vpager_kb);
@@ -99,24 +96,55 @@ public class MainActivity extends AppCompatActivity
         });
         myAdapter = new KeyboardpagerAdapter(vpagers);
         vpager_kb.setAdapter(myAdapter);
+        //初始化三个dot
+        initDots();
+
+        myAdapter = new KeyboardpagerAdapter(vpagers);
+        vpager_kb.setAdapter(myAdapter);
+
+        vpager_kb.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                mDots.get(oldPosition).setImageResource(R.drawable.dot_normal);
+                mDots.get(position).setImageResource(R.drawable.dot_focused);
+                oldPosition = position;
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
         //设置view2位默认页
-        setView2();
+        setView(1);
     }
-    //设置view2位默认页
-    public void setView2(){
+    //设置viewpager默认页
+    public void setView(int position){
         //先强制设定跳转到指定页面
-        try {
-            Field field = vpager_kb.getClass().getField("mCurItem");//参数mCurItem是系统自带的
-            field.setAccessible(true);
-            field.setInt(vpager_kb,1);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
+        myAdapter.setView(vpager_kb,position);
 
         //然后调用下面的函数刷新数据
         myAdapter.notifyDataSetChanged();
         //再调用setCurrentItem()函数设置一次
         vpager_kb.setCurrentItem(1);
+    }
+
+    public void initDots(){
+        //初始化三个dot
+        mDots = new ArrayList<ImageView>();
+        ImageView dotFirst = (ImageView) findViewById(R.id.dot_first);
+        ImageView dotFSecond = (ImageView) findViewById(R.id.dot_second);
+        ImageView dotThird = (ImageView) findViewById(R.id.dot_third);
+        mDots.add(dotFirst);
+        mDots.add(dotFSecond);
+        mDots.add(dotThird);
+        oldPosition =1;
+        mDots.get(oldPosition).setImageResource(R.drawable.dot_focused);
     }
 
     private void initCalcList() {

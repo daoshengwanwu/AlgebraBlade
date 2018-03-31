@@ -4,6 +4,7 @@ import android.support.v4.view.PagerAdapter;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 
 /**
@@ -33,5 +34,16 @@ public class KeyboardpagerAdapter extends PagerAdapter {
     }
     public void destroyItem(ViewGroup container, int position, Object object) {
         container.removeView(viewLists.get(position));
+    }
+    public void setView(ViewGroup container,int position){
+        //先强制设定跳转到指定页面
+        try {
+            Field field = container.getClass().getField("mCurItem");//参数mCurItem是系统自带的
+            field.setAccessible(true);
+            field.setInt(container,position);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
     }
 }
