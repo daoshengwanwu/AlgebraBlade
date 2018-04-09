@@ -17,6 +17,11 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Toast;
+
+import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVObject;
+import com.avos.avoscloud.SaveCallback;
 import com.graduation_project.android.algebrablade.R;
 import com.zhouxiuya.adapter.Calc_ListViewAdapter;
 import com.zhouxiuya.adapter.KeyboardpagerAdapter;
@@ -48,6 +53,18 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        // 测试 SDK 是否正常工作的代码
+        AVObject testObject = new AVObject("TestObject");
+        testObject.put("words","Hello World!");
+        testObject.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(AVException e) {
+                if(e == null){
+                    Log.d("saved","success!");
+                }
+            }
+        });
+
         //listview
         initCalcList();//初始化数据
         //初始化viewpager
@@ -59,6 +76,7 @@ public class MainActivity extends AppCompatActivity
         }
         //初始化侧滑菜单
         initDrawerlayout();
+
 
     }
 
@@ -75,6 +93,10 @@ public class MainActivity extends AppCompatActivity
         //左侧菜单menu设置监听
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        //左侧菜单设置headerLayout
+        //首先判断是否登录，未登录将headerLayout设置成nav_header_main_logout，设置按钮监听事件
+        //已登录将headerLayout设置成nav_header_main_login，获取头像，昵称
+        View headerLayout = navigationView.inflateHeaderView(R.layout.nav_header_main_logout);
     }
     //初始化键盘viewpager
     private void initViewpager() {
@@ -164,18 +186,13 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
+        if (id == R.id.collection) {
+            // Handle the collection action
+            Toast.makeText(MainActivity.this, "请登录！",Toast.LENGTH_SHORT).show();
+        } else if (id == R.id.reset_pwd) {
+            Toast.makeText(MainActivity.this, "请登录！",Toast.LENGTH_SHORT).show();
+        } else if (id == R.id.exit) {
+            Toast.makeText(MainActivity.this, "请登录！",Toast.LENGTH_SHORT).show();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
