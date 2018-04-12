@@ -79,16 +79,14 @@ public class CurveSourceLab {
                 new VarAriExp(expression, variableAssistant), false, getRandomColor()));
 
         expression = "sqrt(x)";
-        variableAssistant = new VariableAssistant().addVariable("x",
-                0, true, 10, false, 0.01);
+        variableAssistant = new VariableAssistant().addVariable("x");
         putCurveSource(6, new CurveSource(
-                new VarAriExp(expression, variableAssistant), true, getRandomColor()));
+                new VarAriExp(expression, variableAssistant), false, getRandomColor()));
 
         expression = "log(2)~x";
-        variableAssistant = new VariableAssistant().addVariable("x",
-                0, true, 10, false, 0.05);
+        variableAssistant = new VariableAssistant().addVariable("x");
         putCurveSource(7, new CurveSource(
-                new VarAriExp(expression, variableAssistant), true, getRandomColor()));
+                new VarAriExp(expression, variableAssistant), false, getRandomColor()));
 
         expression = "6*sin(sin(x/3))";
         variableAssistant = new VariableAssistant().addVariable("x");

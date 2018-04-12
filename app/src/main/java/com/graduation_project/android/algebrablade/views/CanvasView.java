@@ -440,6 +440,10 @@ public class CanvasView extends View {
         float[] points;
         for (int i = 0; i < mCurves.size(); i++) {
             curve = mCurves.valueAt(i);
+            if (curve == null) {
+                continue;
+            }
+
             points = curve.points;
             color = curve.color;
             size = curve.size;

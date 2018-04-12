@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.daoshengwanwu.math_util.calculator.Calculator;
 import com.daoshengwanwu.math_util.calculator.VarAriExp;
 import com.daoshengwanwu.math_util.calculator.Variable;
+import com.daoshengwanwu.math_util.calculator.exception.OperandOutOfBoundsException;
 import com.daoshengwanwu.math_util.calculator.exception.VariableNotSetException;
 import com.graduation_project.android.algebrablade.model.CurveSource;
 import com.graduation_project.android.algebrablade.model.CurveSourceLab;
@@ -174,6 +175,10 @@ public class GraphicActivity extends AppCompatActivity {
         Variable x = varAriExp.getVariableAssistant().getVariable("x");
         x.reset();
 
+        if (x.size() <= 1) {
+            return null;
+        }
+
         if (recycleCurve == null) {
             recycleCurve = new Curve();
         }
@@ -181,12 +186,24 @@ public class GraphicActivity extends AppCompatActivity {
                 recycleCurve.points : new float[x.size() * 2 + 32];
 
         int i = 0;
-        points[i++] = (float)x.curValue();
-        points[i++] = (float)resultGenerator.curValue();
+        try {
+            points[i + 1] = (float) resultGenerator.curValue();
+            points[i] = (float)x.curValue();
+            i += 2;
+        } catch (OperandOutOfBoundsException e) {
+            //do nothing
+        }
 
         while (x.hasNext() && i < points.length - 1) {
-            points[i++] = (float)x.nextValue();
-            points[i++] = (float)resultGenerator.curValue();
+            x.nextValue();
+
+            try {
+                points[i + 1] = (float) resultGenerator.curValue();
+                points[i] = (float)x.curValue();
+                i += 2;
+            } catch (OperandOutOfBoundsException e) {
+                //do nothing
+            }
         }
 
         recycleCurve.points = points;
