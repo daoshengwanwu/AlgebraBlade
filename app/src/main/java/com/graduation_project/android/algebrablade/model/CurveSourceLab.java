@@ -50,7 +50,7 @@ public class CurveSourceLab {
     private void addTestData() {
         String expression = "x";
         VariableAssistant variableAssistant = new VariableAssistant().addVariable("x");
-        putCurveSource(0, new CurveSource(
+        putCurveSource(999, new CurveSource(
                 new VarAriExp(expression, variableAssistant), false, getRandomColor()));
 
         expression = "x^2";
@@ -65,7 +65,7 @@ public class CurveSourceLab {
 
         expression = "sin(x)";
         variableAssistant = new VariableAssistant().addVariable("x");
-        putCurveSource(3, new CurveSource(
+        putCurveSource(666, new CurveSource(
                 new VarAriExp(expression, variableAssistant), false, getRandomColor()));
 
         expression = "cos(x)";

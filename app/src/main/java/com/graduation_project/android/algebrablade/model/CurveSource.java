@@ -15,4 +15,8 @@ public class CurveSource {
         this.isDomainSet = isDomainSet;
         this.color = color;
     }
+
+    public CurveSource() {
+
+    }
 }
