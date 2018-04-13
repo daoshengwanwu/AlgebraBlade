@@ -127,6 +127,8 @@ public class GraphicActivity extends AppCompatActivity {
                 mCurValDisTV.setText(displayStr.toString());
             }
         });
+
+        new GraphicEditDialogBuilder(10, null, this).build().show();
     }
 
     @Override

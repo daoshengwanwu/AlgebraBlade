@@ -4,4 +4,11 @@
     <string name="text_calculate">计算</string>
     <string name="text_rest">结果：</string>
     <string name="get_value">取值</string>
+    <string name="expression_text">表达式（x为变量）：</string>
+    <string name="id_text">ID：</string>
+    <string name="color_text">颜色：</string>
+    <string name="set_domain_text">指定函数定义域</string>
+    <string name="delta_text">步长:</string>
+    <string name="lower_open_text">下限为开区间</string>
+    <string name="upper_open_text">上限为开区间</string>
 </resources>
