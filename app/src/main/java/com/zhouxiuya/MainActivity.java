@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -78,7 +79,8 @@ public class MainActivity extends AppCompatActivity
         //初始化侧滑菜单
         initDrawerlayout();
 
-
+        //禁用系统软键盘
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
     }
 
     //初始化侧滑菜单
