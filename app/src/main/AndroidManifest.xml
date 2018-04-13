@@ -20,7 +20,8 @@
         android:name="com.zhouxiuya.MyLeanCloudApp">
 
         <activity android:name=".LauncherActivity" />
-        <activity android:name=".GraphicEditActivity" />
+        <activity android:name=".GraphicEditActivity"
+            android:parentActivityName="com.zhouxiuya.MainActivity" />
         <activity
             android:name=".GraphicActivity"
             android:parentActivityName=".LauncherActivity" />

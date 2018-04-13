@@ -60,6 +60,10 @@ public class GraphicEditActivity extends AppCompatActivity {
                 startActivity(GraphicActivity.newIntent(this));
             } break;
 
+            case android.R.id.home: {
+                finish();
+            } break;
+
             default: break;
         }
 
