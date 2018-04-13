@@ -1,7 +1,9 @@
 package com.graduation_project.android.algebrablade;
 
 
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -27,6 +29,12 @@ public class GraphicEditActivity extends AppCompatActivity {
     @BindView(R.id.graphic_edit_recycler_view)
     RecyclerView mRecyclerView;
 
+
+    public static Intent newIntent(Context packageContext) {
+        Intent intent = new Intent(packageContext, GraphicEditActivity.class);
+
+        return intent;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

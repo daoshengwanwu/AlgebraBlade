@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/view_style">
+    <!--第一列-->
+    <LinearLayout style="@style/key_col_style1">
+        <Button style="@style/btn_blue_style"
+            android:id="@+id/btn_gen"
+            android:text="√"/>
+        <Button style="@style/btn_blue_style"
+            android:id="@+id/btn_X2"
+            android:text="X²"/>
+        <Button style="@style/btn_gray_style"
+            android:id="@+id/btn_7"
+            android:text="7"/>
+        <Button style="@style/btn_gray_style"
+            android:id="@+id/btn_4"
+            android:text="4"/>
+        <Button style="@style/btn_gray_style"
+            android:id="@+id/btn_1"
+            android:text="1"/>
+        <Button style="@style/btn_gray_style"
+            android:id="@+id/btn_0"
+            android:text="0"/>
+    </LinearLayout>
+
+    <LinearLayout style="@style/key_col_style1">
+        <Button style="@style/btn_blue_style"
+            android:id="@+id/btn_left"
+            android:text="←"/>
+        <Button style="@style/btn_blue_style"
+            android:id="@+id/btn_sin"
+            android:text="sin"/>
+        <Button style="@style/btn_gray_style"
+            android:id="@+id/btn_8"
+            android:text="8"/>
+        <Button style="@style/btn_gray_style"
+            android:id="@+id/btn_5"
+            android:text="5"/>
+        <Button style="@style/btn_gray_style"
+            android:id="@+id/btn_2"
+            android:text="2"/>
+        <Button style="@style/btn_gray_style"
+            android:id="@+id/btn_dian"
+            android:text="."/>
+
+    </LinearLayout>
+    <LinearLayout style="@style/key_col_style1">
+        <Button style="@style/btn_blue_style"
+            android:id="@+id/btn_right"
+            android:text="→"/>
+        <Button style="@style/btn_blue_style"
+            android:id="@+id/btn_cos"
+            android:text="cos"/>
+        <Button style="@style/btn_gray_style"
+            android:id="@+id/btn_9"
+            android:text="9"/>
+        <Button style="@style/btn_gray_style"
+            android:id="@+id/btn_6"
+            android:text="6"/>
+        <Button style="@style/btn_gray_style"
+            android:id="@+id/btn_3"
+            android:text="3"/>
+        <Button style="@style/btn_blue_style"
+            android:id="@+id/btn_E"
+            android:text="E"/>
+
+    </LinearLayout>
+    <LinearLayout style="@style/key_col_style1">
+        <Button style="@style/btn_blue_style"
+            android:id="@+id/btn_zuokuo"
+            android:text="("/>
+        <Button style="@style/btn_blue_style"
+            android:id="@+id/btn_cifang"
+            android:text="^"/>
+        <Button style="@style/btn_blue_style"
+            android:id="@+id/btn_chu"
+            android:text="/"/>
+        <Button style="@style/btn_blue_style"
+            android:id="@+id/btn_cheng"
+            android:text="*"/>
+        <Button style="@style/btn_blue_style"
+            android:id="@+id/btn_jia"
+            android:text="+"/>
+        <Button style="@style/btn_blue_style"
+            android:id="@+id/btn_jian"
+            android:text="-"/>
+    </LinearLayout>
+    <!--最后一列-->
+    <LinearLayout style="@style/key_col_style2">
+        <Button style="@style/btn_blue_style"
+            android:id="@+id/btn_youkuo"
+            android:text=")"/>
+        <Button style="@style/btn_blue_style"
+            android:id="@+id/btn_pi"
+            android:text="π"/>
+        <Button style="@style/btn_origin_style"
+            android:id="@+id/btn_ans"
+            android:text="Ans"/>
+        <Button style="@style/btn_origin_style"
+            android:id="@+id/btn_del"
+            android:text="Del"/>
+        <Button style="@style/btn_origin_style"
+            android:id="@+id/btn_ok"
+            android:layout_weight="2"
+            android:text="OK" />
+
+    </LinearLayout>
+
+</LinearLayout>
