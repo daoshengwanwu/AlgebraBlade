@@ -16,6 +16,7 @@ import com.daoshengwanwu.math_util.calculator.VarAriExp;
 import com.daoshengwanwu.math_util.calculator.Variable;
 import com.daoshengwanwu.math_util.calculator.VariableAssistant;
 import com.graduation_project.android.algebrablade.model.CurveSource;
+import com.graduation_project.android.algebrablade.model.CurveSourceLab;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -92,22 +93,30 @@ public class GraphicEditDialogBuilder {
             mCurveColor = curveSource.color;
             boolean isDomainSet = curveSource.isDomainSet;
 
-            VarAriExp varAriExp = curveSource.varAriExp;
-            String expStr = varAriExp.toString();
-
             mColorTextView.setBackgroundColor(mCurveColor);
-            mIsDomainSetCheckBox.setChecked(false);
-            mExpInputEditText.setText(expStr);
-            if (isDomainSet) {
-                mIsDomainSetCheckBox.setChecked(true);
-                Variable x = varAriExp.getVariableAssistant().getVariable("x");
-                double span = x.getSpan();
-                double lowerLimit = x.getLowerLimit();
-                double upperLimit = x.getUpperLimit();
+            mColorTextView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mCurveColor = CurveSourceLab.getRandomColor();
+                    mColorTextView.setBackgroundColor(mCurveColor);
+                }
+            });
+            mIsDomainSetCheckBox.setChecked(isDomainSet);
 
-                mDeltaEditText.setText("" + span);
-                mLowerLimitEditText.setText("" + lowerLimit);
-                mUpperLimitEditText.setText("" + upperLimit);
+            VarAriExp varAriExp = curveSource.varAriExp;
+            if (varAriExp != null) {
+                String expStr = varAriExp.toString();
+                mExpInputEditText.setText(expStr);
+                if (isDomainSet) {
+                    Variable x = varAriExp.getVariableAssistant().getVariable("x");
+                    double span = x.getSpan();
+                    double lowerLimit = x.getLowerLimit();
+                    double upperLimit = x.getUpperLimit();
+
+                    mDeltaEditText.setText("" + span);
+                    mLowerLimitEditText.setText("" + lowerLimit);
+                    mUpperLimitEditText.setText("" + upperLimit);
+                }
             }
         }
     }
@@ -120,7 +129,7 @@ public class GraphicEditDialogBuilder {
             builder.setPositiveButton("确认", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
-                    int id = -1; //从成员中获取id
+                    int id = mId;
                     mOnConfirmClickListener.onClick(id, getCurveSource());
                 }
             });
@@ -130,7 +139,7 @@ public class GraphicEditDialogBuilder {
             builder.setNeutralButton("删除", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
-                    int id = -1; //从成员中获取id
+                    int id = mId;
                     mOnDeleteClickListener.onClick(id, getCurveSource());
                 }
             });

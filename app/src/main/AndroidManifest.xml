@@ -24,15 +24,14 @@
             android:name=".GraphicActivity"
             android:parentActivityName=".LauncherActivity">
 
+        </activity>
+
+        <activity android:name=".GraphicEditActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-
-        <activity android:name=".GraphicEditActivity">
-
         </activity>
     </application>
 

@@ -99,7 +99,7 @@ public class CurveSourceLab {
                 new VarAriExp(expression, variableAssistant), false, getRandomColor()));
     }
 
-    private int getRandomColor() {
+    public static int getRandomColor() {
         int r = (int)(Math.random() * 255);
         int g = (int)(Math.random() * 255);
         int b = (int)(Math.random() * 255);
