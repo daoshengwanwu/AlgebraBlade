@@ -26,7 +26,7 @@
             android:id="@+id/btn_ln"
             android:text="ln"/>
         <Button style="@style/btn_blue_style"
-            android:id="@+id/mod"
+            android:id="@+id/btn_mod"
             android:text="mod"/>
         <Button style="@style/btn_blue_style"
             android:id="@+id/btn_taylor"
@@ -53,7 +53,7 @@
     </LinearLayout>
     <LinearLayout style="@style/key_col_style1">
         <Button style="@style/btn_gray_style"
-            android:id="@+id/btn_deng"
+            android:id="@+id/btn_equal"
             android:text="="/>
         <Button style="@style/btn_blue_style"
             android:id="@+id/btn_exp"

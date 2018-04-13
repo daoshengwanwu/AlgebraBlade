@@ -2,12 +2,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item android:id="@+id/action_bai"
-        android:icon="@mipmap/enter"
+        android:icon="@mipmap/fx_pic"
 
         android:orderInCategory="100"
         app:showAsAction="always" />
     <item android:id="@+id/action_kuo"
-        android:icon="@mipmap/enter"
+        android:icon="@mipmap/pic_fx"
         android:orderInCategory="100"
         app:showAsAction="always" />
     <item android:id="@+id/action_clear"

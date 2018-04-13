@@ -47,7 +47,7 @@
             android:text="tanh"/>
         <Button style="@style/btn_blue_style"
             android:id="@+id/btn_arctanh"
-            android:text="arctanh"/>
+            android:text="btn_arctanh"/>
 
 
     </LinearLayout>

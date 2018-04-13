@@ -15,55 +15,135 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVOSCloud;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.SaveCallback;
 import com.graduation_project.android.algebrablade.R;
 import com.zhouxiuya.adapter.Calc_ListViewAdapter;
 import com.zhouxiuya.adapter.KeyboardpagerAdapter;
 import com.zhouxiuya.util.Calculation;
+
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 /**
- * Created by zhouxiuay on 2018/3/18.
+ * Created by zhouxiuya on 2018/3/18.
  */
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener{
+        implements NavigationView.OnNavigationItemSelectedListener {
+
     private List<String> func_list;
     private ArrayAdapter<String> arr_adapter;
     //listview 满足多个式子计算
-    private ListView lv_calc;
+    @BindView(R.id.lv_calc)
+    ListView lv_calc;
     private ArrayList<Calculation> cal_clist = new ArrayList<Calculation>();
     private Calc_ListViewAdapter calc_adapter;
     //viewpager
-    private ViewPager vpager_kb;
+    @BindView(R.id.vpager_kb)
+    ViewPager vpager_kb;
     private ArrayList<View> vpagers;
     private KeyboardpagerAdapter myAdapter;
-    private Button btn_ok;
     private List<ImageView> mDots;//定义一个集合存储三个dot
     private int oldPosition;//记录当前点的位置。
+    //view1
+    private Button btn_a;
+    private Button btn_xgen;
+    private Button btn_gcd;
+    private Button btn_solve;
+    private Button btn_b;
+    private Button btn_ln;
+    private Button btn_mod;
+    private Button btn_taylor;
+    private Button btn_c;
+    private Button btn_log;
+    private Button btn_jiecheng;
+    private Button btn_int;
+    private Button btn_equal;
+    private Button btn_exp;
+    private Button btn_e;
+    private Button btn_diff;
+    private Button btn_dou;
+    private Button btn_X;
+    private Button btn_nCr;
+    private Button btn_nPr;
+    //view2
+    private Button btn_gen;
+    private Button btn_X2;
+    private Button btn_7;
+    private Button btn_4;
+    private Button btn_1;
+    private Button btn_0;
+    private Button btn_left;
+    private Button btn_sin1;
+    private Button btn_8;
+    private Button btn_5;
+    private Button btn_2;
+    private Button btn_dian;
+    private Button btn_right;
+    private Button btn_cos1;
+    private Button btn_9;
+    private Button btn_6;
+    private Button btn_3;
+    private Button btn_E;
+    private Button btn_zuokuo;
+    private Button btn_cifang;
+    private Button btn_chu;
+    private Button btn_cheng;
+    private Button btn_jia;
+    private Button btn_jian;
+    private Button btn_youkuo;
+    private Button btn_pi;
+    private Button btn_ans;
+    private Button btn_del;
+    private Button btn_ok;
+    //view3
+    private Button btn_sin2;
+    private Button arcsin;
+    private Button sinh;
+    private Button arcsinh;
+    private Button btn_cos2;
+    private Button btn_arccos;
+    private Button btn_cosh;
+    private Button btn_arccosh;
+    private Button btn_tan;
+    private Button btn_arctan;
+    private Button btn_tanh;
+    private Button btn_arctanh;
+    private Button btn_abs;
+    private Button btn_g;
+    private Button btn_floor;
+    private Button btn_frac;
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        // 测试 SDK 是否正常工作的代码
-        AVObject testObject = new AVObject("TestObject");
-        testObject.put("words","Hello World!");
-        testObject.saveInBackground(new SaveCallback() {
-            @Override
-            public void done(AVException e) {
-                if(e == null){
-                    Log.d("saved","success!");
-                }
-            }
-        });
+        ButterKnife.bind(this);
+//        // 测试 SDK 是否正常工作的代码
+//        AVObject testObject = new AVObject("TestObject");
+//        testObject.put("words","周秀雅");
+//        testObject.saveInBackground(new SaveCallback() {
+//            @Override
+//            public void done(AVException e) {
+//                if(e == null){
+//                    Log.d("saved","success!");
+//                }
+//            }
+//        });
 
         //listview
         initCalcList();//初始化数据
@@ -81,7 +161,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     //初始化侧滑菜单
-    public void initDrawerlayout(){
+    public void initDrawerlayout() {
         //侧滑菜单
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -98,9 +178,10 @@ public class MainActivity extends AppCompatActivity
         //已登录将headerLayout设置成nav_header_main_login，获取头像，昵称
         View headerLayout = navigationView.inflateHeaderView(R.layout.nav_header_main_logout);
     }
+
     //初始化键盘viewpager
     private void initViewpager() {
-        vpager_kb = (ViewPager) findViewById(R.id.vpager_kb);
+//        vpager_kb = (ViewPager) findViewById(R.id.vpager_kb);
         vpagers = new ArrayList<View>();
         View view1 = getLayoutInflater().inflate(R.layout.view1, null, false);
         View view2 = getLayoutInflater().inflate(R.layout.view2, null, false);
@@ -108,22 +189,13 @@ public class MainActivity extends AppCompatActivity
         vpagers.add(view1);
         vpagers.add(view2);
         vpagers.add(view3);
-        btn_ok = (Button) view2.findViewById(R.id.btn_ok);
-        btn_ok.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                calc_adapter.addItem();
-                calc_adapter.notifyDataSetChanged();
-            }
-        });
+
         myAdapter = new KeyboardpagerAdapter(vpagers);
         vpager_kb.setAdapter(myAdapter);
         //初始化三个dot
         initDots();
-
         myAdapter = new KeyboardpagerAdapter(vpagers);
         vpager_kb.setAdapter(myAdapter);
-
         vpager_kb.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -144,11 +216,22 @@ public class MainActivity extends AppCompatActivity
         });
         //设置view2位默认页
         setView(1);
+        //设置键盘点击
+        btn_ok = (Button) view2.findViewById(R.id.btn_ok);
+        btn_ok.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                calc_adapter.addItem();
+                calc_adapter.notifyDataSetChanged();
+            }
+        });
     }
+
+
     //设置viewpager默认页
-    public void setView(int position){
+    public void setView(int position) {
         //先强制设定跳转到指定页面
-        myAdapter.setView(vpager_kb,position);
+        myAdapter.setView(vpager_kb, position);
 
         //然后调用下面的函数刷新数据
         myAdapter.notifyDataSetChanged();
@@ -156,7 +239,7 @@ public class MainActivity extends AppCompatActivity
         vpager_kb.setCurrentItem(1);
     }
 
-    public void initDots(){
+    public void initDots() {
         //初始化三个dot
         mDots = new ArrayList<ImageView>();
         ImageView dotFirst = (ImageView) findViewById(R.id.dot_first);
@@ -165,15 +248,13 @@ public class MainActivity extends AppCompatActivity
         mDots.add(dotFirst);
         mDots.add(dotFSecond);
         mDots.add(dotThird);
-        oldPosition =1;
+        oldPosition = 1;
         mDots.get(oldPosition).setImageResource(R.drawable.dot_focused);
     }
 
     private void initCalcList() {
-        lv_calc = (ListView) findViewById(R.id.lv_calc);
-        //enter_btn = (Button) findViewById(R.id.enter_btn);
+//        lv_calc = (ListView) findViewById(R.id.lv_calc);
         calc_adapter = new Calc_ListViewAdapter(this, cal_clist);
-        lv_calc = (ListView) findViewById(R.id.lv_calc);
         lv_calc.setAdapter(calc_adapter);
         calc_adapter.addItem();
         calc_adapter.notifyDataSetChanged();
@@ -188,11 +269,11 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.collection) {
             // Handle the collection action
-            Toast.makeText(MainActivity.this, "请登录！",Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, "请登录！", Toast.LENGTH_SHORT).show();
         } else if (id == R.id.reset_pwd) {
-            Toast.makeText(MainActivity.this, "请登录！",Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, "请登录！", Toast.LENGTH_SHORT).show();
         } else if (id == R.id.exit) {
-            Toast.makeText(MainActivity.this, "请登录！",Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, "请登录！", Toast.LENGTH_SHORT).show();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -213,6 +294,7 @@ public class MainActivity extends AppCompatActivity
             super.onBackPressed();
         }
     }
+
     //右侧菜单
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -235,5 +317,9 @@ public class MainActivity extends AppCompatActivity
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void getId() {
+
     }
 }
