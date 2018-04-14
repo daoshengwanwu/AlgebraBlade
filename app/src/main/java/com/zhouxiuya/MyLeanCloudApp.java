@@ -13,6 +13,6 @@ public class MyLeanCloudApp extends Application {
     public void onCreate() {
         super.onCreate();
         // 初始化参数依次为 this, AppId, AppKey
-        AVOSCloud.initialize(this,"fQm0B3CqunDTUKH3UKiazic5-gzGzoHsz","M6SjT5oXWiYrImSIJlxIBBEV");
+        AVOSCloud.initialize(this,"qXiPsPttUSeNI3Yw4BO47fKj-gzGzoHsz","FILqTQPNig7U4eilzfqA4B1L");
     }
 }
