@@ -1,5 +1,6 @@
 package com.zhouxiuya;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -13,6 +14,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -24,6 +26,7 @@ import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVOSCloud;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.SaveCallback;
+import com.graduation_project.android.algebrablade.GraphicEditActivity;
 import com.graduation_project.android.algebrablade.R;
 import com.zhouxiuya.adapter.Calc_ListViewAdapter;
 import com.zhouxiuya.adapter.KeyboardpagerAdapter;
@@ -125,6 +128,7 @@ public class MainActivity extends AppCompatActivity
     private Button btn_floor;
     private Button btn_frac;
 
+    private Button btn_login;
 
 
 
@@ -157,6 +161,9 @@ public class MainActivity extends AppCompatActivity
         //初始化侧滑菜单
         initDrawerlayout();
 
+        //禁用系统软键盘
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
+
 
     }
 
@@ -177,6 +184,14 @@ public class MainActivity extends AppCompatActivity
         //首先判断是否登录，未登录将headerLayout设置成nav_header_main_logout，设置按钮监听事件
         //已登录将headerLayout设置成nav_header_main_login，获取头像，昵称
         View headerLayout = navigationView.inflateHeaderView(R.layout.nav_header_main_logout);
+        btn_login = (Button)headerLayout.findViewById(R.id.btn_login);
+        btn_login.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(LoginActivity.newIntent(MainActivity.this));
+            }
+        });
+
     }
 
     //初始化键盘viewpager
@@ -310,10 +325,16 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //设置右上角弹框id
-        if (id == R.id.action_clear) {
-            calc_adapter.clearListview();
-            calc_adapter.notifyDataSetChanged();
-            return true;
+        switch (id) {
+            case R.id.action_bai: {
+                startActivity(GraphicEditActivity.newIntent(this));
+            }break;
+            case R.id.action_clear:{
+                calc_adapter.clearListview();
+                calc_adapter.notifyDataSetChanged();
+            }break;
+
+            default: break;
         }
 
         return super.onOptionsItemSelected(item);

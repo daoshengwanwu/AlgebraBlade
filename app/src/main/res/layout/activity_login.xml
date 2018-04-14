@@ -7,8 +7,6 @@
     android:orientation="vertical"
     tools:context="com.zhouxiuya.LoginActivity">
 
-    <include layout="@layout/title_bar"></include>
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -68,7 +66,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="40dp"
-                android:background="@drawable/btn_login_shape"
+                android:background="@drawable/login"
                 android:textColor="#ffffff"
                 android:textSize="20sp"
                 android:text="Login" />

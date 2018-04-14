@@ -16,29 +16,25 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme"
-        android:name="com.zhouxiuya.MyLeanCloudApp">
-        <activity android:name=".LauncherActivity">
+        android:theme="@style/AppTheme">
 
-            <!-- <intent-filter> -->
-            <!-- <action android:name="android.intent.action.MAIN" /> -->
-
-
-            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
-            <!-- </intent-filter> -->
-        </activity>
 
         <!-- 为了测试先将这个Activity设置为启动Activity -->
         <activity
             android:name="com.zhouxiuya.MainActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme">
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.MAIN" />-->
+            android:theme="@style/MainTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
-                <!--<category android:name="android.intent.category.LAUNCHER" />-->
-            <!--</intent-filter>-->
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
+        <activity android:name=".GraphicEditActivity"
+            android:parentActivityName="com.zhouxiuya.MainActivity" />
+        <activity
+            android:name=".GraphicActivity"
+            android:parentActivityName=".LauncherActivity" />
 
         <!-- 实时通信模块、推送（均需要加入以下声明） START -->
         <!-- 实时通信模块、推送都要使用 PushService -->
@@ -60,14 +56,8 @@
 
         <!--LoginActivity-->
         <activity android:name="com.zhouxiuya.LoginActivity"
-            android:label="Login"
-            android:theme="@style/AppTheme">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-
+            android:parentActivityName="com.zhouxiuya.MainActivity"
+            android:label="Login">
         </activity>
     </application>
 
