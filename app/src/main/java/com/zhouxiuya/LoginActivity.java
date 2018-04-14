@@ -18,6 +18,7 @@ public class LoginActivity extends AppCompatActivity {
     @BindView(R.id.btn_login) Button btn_login;
     @BindView(R.id.et_username) Button et_username;
     @BindView(R.id.et_pwd) Button et_pwd;
+    //测试
 
     public static Intent newIntent(Context packageContext) {
         Intent intent = new Intent(packageContext, LoginActivity.class);
