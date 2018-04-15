@@ -1,5 +1,7 @@
 package com.zhouxiuya;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -20,11 +22,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVOSCloud;
 import com.avos.avoscloud.AVObject;
+import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.SaveCallback;
 import com.graduation_project.android.algebrablade.GraphicEditActivity;
 import com.graduation_project.android.algebrablade.R;
@@ -130,6 +134,7 @@ public class MainActivity extends AppCompatActivity
 
     private Button btn_login;
 
+    private TextView tv_username;
 
 
     @Override
@@ -137,18 +142,6 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-//        // 测试 SDK 是否正常工作的代码
-//        AVObject testObject = new AVObject("TestObject");
-//        testObject.put("words","周秀雅");
-//        testObject.saveInBackground(new SaveCallback() {
-//            @Override
-//            public void done(AVException e) {
-//                if(e == null){
-//                    Log.d("saved","success!");
-//                }
-//            }
-//        });
-
         //listview
         initCalcList();//初始化数据
         //初始化viewpager
@@ -167,6 +160,10 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+    @SuppressLint("MissingSuperCall")
+    public void onResume(){
+        super.onResume();
+    }
     //初始化侧滑菜单
     public void initDrawerlayout() {
         //侧滑菜单
@@ -180,18 +177,37 @@ public class MainActivity extends AppCompatActivity
         //左侧菜单menu设置监听
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        //设置headerlayout
+        setHeaderView(navigationView);
+    }
+
+    //设置headerlayout
+    public void setHeaderView(NavigationView navigationView){
         //左侧菜单设置headerLayout
         //首先判断是否登录，未登录将headerLayout设置成nav_header_main_logout，设置按钮监听事件
         //已登录将headerLayout设置成nav_header_main_login，获取头像，昵称
-        View headerLayout = navigationView.inflateHeaderView(R.layout.nav_header_main_logout);
-        btn_login = (Button)headerLayout.findViewById(R.id.btn_login);
-        btn_login.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(LoginActivity.newIntent(MainActivity.this));
-            }
-        });
+        View headerLayout = null;
+        if (AVUser.getCurrentUser() != null) {
+            headerLayout = navigationView.inflateHeaderView(R.layout.nav_header_main_login);
+            tv_username = (TextView)headerLayout.findViewById(R.id.tv_username);
+            tv_username.setText(AVUser.getCurrentUser().getUsername());
 
+        }else{
+            headerLayout = navigationView.inflateHeaderView(R.layout.nav_header_main_logout);
+            btn_login = (Button)headerLayout.findViewById(R.id.btn_login);
+            btn_login.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    startActivity(LoginActivity.newIntent(MainActivity.this));
+                }
+            });
+        }
+    }
+
+    public static Intent newIntent(Context packageContext) {
+        Intent intent = new Intent(packageContext, MainActivity.class);
+        return intent;
     }
 
     //初始化键盘viewpager
@@ -268,7 +284,6 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void initCalcList() {
-//        lv_calc = (ListView) findViewById(R.id.lv_calc);
         calc_adapter = new Calc_ListViewAdapter(this, cal_clist);
         lv_calc.setAdapter(calc_adapter);
         calc_adapter.addItem();
@@ -288,7 +303,14 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.reset_pwd) {
             Toast.makeText(MainActivity.this, "请登录！", Toast.LENGTH_SHORT).show();
         } else if (id == R.id.exit) {
-            Toast.makeText(MainActivity.this, "请登录！", Toast.LENGTH_SHORT).show();
+            if (AVUser.getCurrentUser() != null){
+                AVUser.logOut();
+//                initDrawerlayout();
+            }else {
+                Toast.makeText(MainActivity.this, "请登录！", Toast.LENGTH_SHORT).show();
+            }
+
+
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
