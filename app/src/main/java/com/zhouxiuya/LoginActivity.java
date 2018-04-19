@@ -58,6 +58,17 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home: {
+                finish();
+            } return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_login:
@@ -98,7 +109,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             public void done(AVUser avUser, AVException e) {
                 if (e == null) {
                     LoginActivity.this.finish();
-                    startActivity(MainActivity.newIntent(LoginActivity.this));
                 } else {
                     Toast.makeText(LoginActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
