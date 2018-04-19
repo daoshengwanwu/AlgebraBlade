@@ -6,4 +6,5 @@
     <color name="color_value_display">#AFFFFFFF</color>
     <color name="colorBanner">#87CEFA</color>
     <color name="bar_color">#0570B4</color>
+    <color name="indigo"></color>
 </resources>

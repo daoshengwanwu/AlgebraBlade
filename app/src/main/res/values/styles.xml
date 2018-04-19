@@ -89,6 +89,9 @@
         <item name="android:textSize">20sp</item>
         <item name="android:textColor">@color/bar_color</item>
     </style>
-
+    <style name="MyEditText" parent="Theme.AppCompat.Light">
+        <item name="colorControlNormal">#000000</item>
+        <item name="colorControlActivated">#40E0D0</item>
+    </style>
 
 </resources>

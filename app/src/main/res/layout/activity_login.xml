@@ -10,19 +10,18 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginRight="20dp"
-        android:layout_marginLeft="20dp"
+        android:layout_margin="20dp"
         android:layout_gravity="center_horizontal"
         android:orientation="vertical">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="10"
-            android:layout_marginTop="40dp"
             android:orientation="vertical">
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="80dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
                 android:layout_gravity="center_horizontal">
                 <TextView
                     android:layout_width="0dp"
@@ -34,8 +33,12 @@
                     android:id="@+id/et_username"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="3"
-                    android:hint="请输入"/>
+                    android:background="@drawable/bg_edittext"
+                    android:padding="5dp"
+                    android:textColor="#AAAAAA"
+                    android:textSize="20sp"
+                    android:singleLine="true"
+                    android:layout_weight="3" />
                 <TextView
                     android:id="@+id/tv_username"
                     android:layout_width="0dp"
@@ -45,6 +48,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="80dp"
+                android:layout_marginTop="20dp"
                 android:layout_gravity="center_horizontal">
                 <TextView
                     android:layout_width="0dp"
@@ -57,6 +61,11 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="3"
+                    android:background="@drawable/bg_edittext"
+                    android:padding="5dp"
+                    android:textColor="#AAAAAA"
+                    android:textSize="20sp"
+                    android:singleLine="true"
                     android:inputType="textPassword"/>
                 <TextView
                     android:id="@+id/tv_pwd"
@@ -73,7 +82,7 @@
                 android:background="@drawable/login"
                 android:textColor="#ffffff"
                 android:textSize="20sp"
-                android:text="Login" />
+                android:text="Log in" />
         </LinearLayout>
 
         <LinearLayout
@@ -81,9 +90,9 @@
             android:layout_height="0dp"
             android:layout_weight="1">
             <TextView
-                android:id="@+id/tv_forgrt"
+                android:id="@+id/tv_forgot"
                 style="@style/logintext_style"
-                android:text="Forget password"/>
+                android:text="Forgot password?"/>
             <TextView
                 android:id="@+id/tv_register"
                 style="@style/logintext_style"

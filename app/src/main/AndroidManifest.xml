@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.graduation_project.android.algebrablade">
+
     <!-- 基础模块（必须加入以下声明）START -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <!-- 基础模块 END -->
 
+    <!-- 基础模块 END -->
     <application
         android:name="com.zhouxiuya.MyLeanCloudApp"
         android:allowBackup="true"
@@ -17,7 +18,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
 
         <!-- 为了测试先将这个Activity设置为启动Activity -->
         <activity
@@ -30,7 +30,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".GraphicEditActivity"
+        <activity
+            android:name=".GraphicEditActivity"
             android:parentActivityName="com.zhouxiuya.MainActivity" />
         <activity
             android:name=".GraphicActivity"
@@ -51,14 +52,28 @@
 
 
         <!-- 反馈组件（需要加入以下声明）START -->
-        <activity android:name="com.avos.avoscloud.feedback.ThreadActivity"></activity>
+        <activity android:name="com.avos.avoscloud.feedback.ThreadActivity" />
         <!-- 反馈组件 END -->
 
-        <!--LoginActivity-->
-        <activity android:name="com.zhouxiuya.LoginActivity"
-            android:parentActivityName="com.zhouxiuya.MainActivity"
-            android:label="Login">
-        </activity>
+
+        <!-- LoginActivity -->
+        <activity
+            android:name="com.zhouxiuya.LoginActivity"
+            android:label="Login"
+            android:parentActivityName="com.zhouxiuya.MainActivity" />
+        <activity
+            android:name="com.zhouxiuya.RegisterActivity"
+            android:label="Register"
+            android:parentActivityName="com.zhouxiuya.MainActivity" />
+        <activity
+            android:name="com.zhouxiuya.FindpwdActivity"
+            android:label="Login"
+            android:parentActivityName="com.zhouxiuya.LoginActivity" />
+        <activity
+            android:name="com.zhouxiuya.ResetpwdActivity"
+            android:label="Login"
+            android:parentActivityName="com.zhouxiuya.LoginActivity" />
+        <activity android:name="com.zhouxiuya.ResetpwdActivity$CollectionActivity"></activity>
     </application>
 
 </manifest>
