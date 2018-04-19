@@ -299,18 +299,23 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.collection) {
             // Handle the collection action
-            Toast.makeText(MainActivity.this, "请登录！", Toast.LENGTH_SHORT).show();
+            if(AVUser.getCurrentUser()!=null){
+                startActivity(CollectionActivity.newIntent(MainActivity.this));
+            }else{
+                Toast.makeText(MainActivity.this, "请登录！", Toast.LENGTH_SHORT).show();
+            }
         } else if (id == R.id.reset_pwd) {
-            Toast.makeText(MainActivity.this, "请登录！", Toast.LENGTH_SHORT).show();
+            if(AVUser.getCurrentUser()!=null){
+                startActivity(ResetpwdActivity.newIntent(MainActivity.this));
+            }else{
+                Toast.makeText(MainActivity.this, "请登录！", Toast.LENGTH_SHORT).show();
+            }
         } else if (id == R.id.exit) {
             if (AVUser.getCurrentUser() != null){
                 AVUser.logOut();
-//                initDrawerlayout();
             }else {
                 Toast.makeText(MainActivity.this, "请登录！", Toast.LENGTH_SHORT).show();
             }
-
-
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

@@ -71,9 +71,13 @@
             android:parentActivityName="com.zhouxiuya.LoginActivity" />
         <activity
             android:name="com.zhouxiuya.ResetpwdActivity"
-            android:label="Login"
+            android:label="Reset password"
             android:parentActivityName="com.zhouxiuya.LoginActivity" />
-        <activity android:name="com.zhouxiuya.ResetpwdActivity$CollectionActivity"></activity>
+        <activity android:name="com.zhouxiuya.CollectionActivity"
+            android:label="Collection"
+            android:parentActivityName="com.zhouxiuya.MainActivity" >
+
+        </activity>
     </application>
 
 </manifest>

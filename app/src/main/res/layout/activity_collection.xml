@@ -4,6 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.graduation_project.android.algebrablade.com.zhouxiuya.ResetpwdActivity$CollectionActivity">
+    tools:context="com.zhouxiuya.CollectionActivity">
 
 </android.support.constraint.ConstraintLayout>
