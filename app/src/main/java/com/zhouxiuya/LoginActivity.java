@@ -123,4 +123,5 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         super.onResume();
         AVAnalytics.onResume(this);
     }
+
 }
