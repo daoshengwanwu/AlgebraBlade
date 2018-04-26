@@ -94,4 +94,18 @@
         <item name="colorControlActivated">#40E0D0</item>
     </style>
 
+    <style name="keyboard_button_style" parent="@style/Widget.AppCompat.Button.Borderless">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">45dp</item>
+        <item name="android:layout_weight">1</item>
+    </style>
+
+    <style name="keyboard_light_gray" parent="keyboard_button_style">
+        <item name="android:background">@drawable/keyboard_button_light_background</item>
+    </style>
+
+    <style name="keyboard_dark_gray" parent="keyboard_button_style">
+        <item name="android:background">@drawable/keyboard_button_dark_background</item>
+    </style>
+
 </resources>

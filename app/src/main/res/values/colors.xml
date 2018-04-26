@@ -6,5 +6,7 @@
     <color name="color_value_display">#AFFFFFFF</color>
     <color name="colorBanner">#87CEFA</color>
     <color name="bar_color">#0570B4</color>
-    <color name="indigo"></color>
+    <color name="color_keyboard_light">#efefef</color>
+    <color name="color_keyboard_dark">#dfdfdf</color>
+    <color name="color_keyboard_button_pressed">#afafaf</color>
 </resources>

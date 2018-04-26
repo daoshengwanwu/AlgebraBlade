@@ -1,35 +1,37 @@
 package com.zhouxiuya.adapter;
 
+
 import android.content.Context;
 import android.text.Editable;
-import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.EditText;
 import android.widget.TextView;
 
 
+import com.daoshengwanwu.math_util.calculator.Calculator;
 import com.graduation_project.android.algebrablade.R;
+import com.graduation_project.android.algebrablade.views.custom_keyboard.CustomEditText;
+import com.graduation_project.android.algebrablade.views.custom_keyboard.CustomInputMethodManager;
 import com.zhouxiuya.util.Calculation;
 
 import java.util.ArrayList;
 
 
-/**
- * Created by zhouxiuya on 2018/3/14.
- */
-
 public class Calc_ListViewAdapter extends BaseAdapter{
-    private EditText editText;
     private Context context;
-    private ArrayList<Calculation> calculations = new ArrayList<Calculation>();
+    private Calculator mCalculator = new Calculator();
+    private ArrayList<Calculation> calculations;
+    private int mFocusPosition;
+
+
     public Calc_ListViewAdapter(Context mcontext, ArrayList<Calculation> mcalculations) {
         context=mcontext;
         calculations=mcalculations;
     }
+
     @Override
     public int getCount() {
         return calculations.size();
@@ -46,23 +48,34 @@ public class Calc_ListViewAdapter extends BaseAdapter{
     }
 
     @Override
-    public View getView(int i, View view, ViewGroup viewGroup) {
-        view= LayoutInflater.from(context).inflate(R.layout.calc_item,null);
+    public View getView(final int i, View view, ViewGroup viewGroup) {
+        view = LayoutInflater.from(context).inflate(R.layout.calc_item, null);
+        final CustomEditText calc_in = view.findViewById(R.id.et_calcin);
+        final TextView calc_out = view.findViewById(R.id.tv_calcout);
 
-        final Calculation data = calculations.get(i);
-        EditText calc_in=(EditText)view.findViewById(R.id.et_calcin);
-        TextView calc_out=(TextView)view.findViewById(R.id.tv_calcout);
-        calc_in.setHint(data.getCalc_in());
+        final Calculation data = (Calculation)getItem(i);
+        calc_in.setText(data.getCalc_in());
         calc_out.setText(data.getCalc_out());
+
         calc_in.addTextChangedListener(new TextWatcher() {
+            private String beforeText = null;
+
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
+                beforeText = charSequence.toString();
             }
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 data.setCalc_in(charSequence.toString());
+                try {
+                    double result = mCalculator.calculate(charSequence.toString());
+                    calc_out.setText(result + "");
+                    data.setCalc_out(result + "");
+                } catch (RuntimeException e) {
+                    calc_out.setText("NaN");
+                    data.setCalc_out("NaN");
+                }
             }
 
             @Override
@@ -70,6 +83,15 @@ public class Calc_ListViewAdapter extends BaseAdapter{
 
             }
         });
+        calc_in.setExtraOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                if (b) {
+                    mFocusPosition = i;
+                }
+            }
+        });
+        calc_in.requestFocus();
 
         return view;
     }
@@ -77,6 +99,7 @@ public class Calc_ListViewAdapter extends BaseAdapter{
     public void addItem(){
         if (calculations!=null){
             calculations.add(new Calculation(getCount(),"",""));
+            notifyDataSetChanged();
         }
     }
     //删除item数据
@@ -93,9 +116,11 @@ public class Calc_ListViewAdapter extends BaseAdapter{
         calculations.get(0).setCalc_in("");
         calculations.get(0).setCalc_out("");
     }
-    //关闭软键盘
-    public void closeKeyboard(){
-        editText=(EditText)LayoutInflater.from(context).inflate(R.layout.calc_item,null).findViewById(R.id.et_calcin);
-        editText.setInputType(InputType.TYPE_NULL);
+
+    public void removeFocusItem() {
+        if (mFocusPosition > 0) {
+            calculations.remove(mFocusPosition);
+            notifyDataSetChanged();
+        }
     }
 }

@@ -8,21 +8,18 @@
     tools:showIn="@layout/app_bar_main"
     tools:context="com.zhouxiuya.MainActivity"
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
-    <LinearLayout
+
+    <ListView
+        android:id="@+id/lv_calc"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="3"
-        android:orientation="vertical">
+        android:layout_weight="1"
+        android:descendantFocusability="afterDescendants"/>
 
-        <ListView
-            android:id="@+id/lv_calc"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:descendantFocusability="afterDescendants"/>
-
-
-    </LinearLayout>
-    <!-- 是用xml自定义键盘样式 使用KeyboardView键盘控件存放定义的键盘布局 -->
-    <include layout="@layout/key_board" />
+    <com.graduation_project.android.algebrablade.views.custom_keyboard.CustomKeyboard
+        android:id="@+id/custom_keyboard"
+        android:layout_width="match_parent"
+        android:layout_height="270dp"
+        android:background="#efefef"/>
 
 </LinearLayout>

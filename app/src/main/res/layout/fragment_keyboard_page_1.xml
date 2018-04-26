@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/sqrt"
+            style="@style/keyboard_light_gray"
+            android:text="sqrt"/>
+
+        <Button
+            android:id="@+id/move_left"
+            style="@style/keyboard_light_gray"
+            android:text="←"/>
+
+        <Button
+            android:id="@+id/move_right"
+            style="@style/keyboard_light_gray"
+            android:text="→"/>
+
+        <Button
+            android:id="@+id/left_brackets"
+            style="@style/keyboard_light_gray"
+            android:text="("/>
+
+        <Button
+            android:id="@+id/right_brackets"
+            style="@style/keyboard_light_gray"
+            android:text=")"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/fact_or_x"
+            style="@style/keyboard_light_gray"
+            android:text="!"/>
+
+        <Button
+            android:id="@+id/sin"
+            style="@style/keyboard_light_gray"
+            android:text="sin"/>
+
+        <Button
+            android:id="@+id/cos"
+            style="@style/keyboard_light_gray"
+            android:text="cos"/>
+
+        <Button
+            android:id="@+id/power"
+            style="@style/keyboard_light_gray"
+            android:text="^"/>
+
+        <Button
+            android:id="@+id/pi"
+            style="@style/keyboard_light_gray"
+            android:text="pi"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/num_7"
+            style="@style/keyboard_dark_gray"
+            android:text="7"/>
+
+        <Button
+            android:id="@+id/num_8"
+            style="@style/keyboard_dark_gray"
+            android:text="8"/>
+
+        <Button
+            android:id="@+id/num_9"
+            style="@style/keyboard_dark_gray"
+            android:text="9"/>
+
+        <Button
+            android:id="@+id/div"
+            style="@style/keyboard_light_gray"
+            android:text="/"/>
+
+        <Button
+            android:id="@+id/abs"
+            style="@style/keyboard_light_gray"
+            android:text="|"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/num_4"
+            style="@style/keyboard_dark_gray"
+            android:text="4"/>
+
+        <Button
+            android:id="@+id/num_5"
+            style="@style/keyboard_dark_gray"
+            android:text="5"/>
+
+        <Button
+            android:id="@+id/num_6"
+            style="@style/keyboard_dark_gray"
+            android:text="6"/>
+
+        <Button
+            android:id="@+id/mul"
+            style="@style/keyboard_light_gray"
+            android:text="*"/>
+
+        <ImageButton
+            android:id="@+id/del"
+            style="@style/keyboard_light_gray"
+            android:src="@drawable/ic_del"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/num_1"
+            style="@style/keyboard_dark_gray"
+            android:text="1"/>
+
+        <Button
+            android:id="@+id/num_2"
+            style="@style/keyboard_dark_gray"
+            android:text="2"/>
+
+        <Button
+            android:id="@+id/num_3"
+            style="@style/keyboard_dark_gray"
+            android:text="3"/>
+
+        <Button
+            android:id="@+id/add"
+            style="@style/keyboard_light_gray"
+            android:text="+"/>
+
+        <Button
+            android:id="@+id/mod"
+            style="@style/keyboard_light_gray"
+            android:text="%"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/num_0"
+            style="@style/keyboard_dark_gray"
+            android:text="0"/>
+
+        <Button
+            android:id="@+id/point"
+            style="@style/keyboard_dark_gray"
+            android:text="."/>
+
+        <Button
+            android:id="@+id/e"
+            style="@style/keyboard_dark_gray"
+            android:text="e"/>
+
+        <Button
+            android:id="@+id/sub"
+            style="@style/keyboard_light_gray"
+            android:text="-"/>
+
+        <ImageButton
+            android:id="@+id/enter"
+            style="@style/keyboard_light_gray"
+            android:src="@drawable/ic_enter"/>
+    </LinearLayout>
+</LinearLayout>

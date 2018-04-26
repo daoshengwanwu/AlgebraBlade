@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/tan"
+            style="@style/keyboard_light_gray"
+            android:text="tan"/>
+
+        <Button
+            android:id="@+id/arcsin"
+            style="@style/keyboard_light_gray"
+            android:text="arcsin"/>
+
+        <Button
+            android:id="@+id/arccos"
+            style="@style/keyboard_light_gray"
+            android:text="arccos"/>
+
+        <Button
+            android:id="@+id/arctan"
+            style="@style/keyboard_light_gray"
+            android:text="arctan"/>
+
+        <Button
+            android:id="@+id/ln"
+            style="@style/keyboard_light_gray"
+            android:text="ln"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/lg"
+            style="@style/keyboard_light_gray"
+            android:text="lg"/>
+
+        <Button
+            android:id="@+id/log"
+            style="@style/keyboard_light_gray"
+            android:text="log"/>
+
+        <Button
+            android:id="@+id/log_end"
+            style="@style/keyboard_light_gray"
+            android:text="~"/>
+    </LinearLayout>
+</LinearLayout>
