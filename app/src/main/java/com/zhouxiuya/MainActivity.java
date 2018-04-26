@@ -49,6 +49,8 @@ import butterknife.ButterKnife;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    private static final int REQUEST_LOGIN_ACTIVITY = 0;
+
     private List<String> func_list;
     private ArrayAdapter<String> arr_adapter;
     //listview 满足多个式子计算
@@ -156,34 +158,44 @@ public class MainActivity extends AppCompatActivity
 
         //禁用系统软键盘
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
-
-
     }
 
     @SuppressLint("MissingSuperCall")
     public void onResume(){
         super.onResume();
     }
+
     //初始化侧滑菜单
     public void initDrawerlayout() {
         //侧滑菜单
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+                this, drawer, toolbar, R.string.navigation_drawer_open,
+                R.string.navigation_drawer_close);
+
         drawer.addDrawerListener(toggle);
         toggle.syncState();
+
         //左侧菜单menu设置监听
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        //设置headerlayout
-        setHeaderView(navigationView);
+        //更新headerlayout
+        updateHeaderView();
     }
 
     //设置headerlayout
-    public void setHeaderView(NavigationView navigationView){
+    public void updateHeaderView(){
+        NavigationView navigationView = findViewById(R.id.nav_view);
+
+        View headerView = navigationView.getHeaderView(0);
+        if (headerView != null) {
+            navigationView.removeHeaderView(headerView);
+        }
+
         //左侧菜单设置headerLayout
         //首先判断是否登录，未登录将headerLayout设置成nav_header_main_logout，设置按钮监听事件
         //已登录将headerLayout设置成nav_header_main_login，获取头像，昵称
@@ -199,10 +211,18 @@ public class MainActivity extends AppCompatActivity
             btn_login.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    startActivity(LoginActivity.newIntent(MainActivity.this));
+                    startActivityForResult(LoginActivity.newIntent(MainActivity.this),
+                            REQUEST_LOGIN_ACTIVITY);
                 }
             });
         }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        updateHeaderView();
     }
 
     public static Intent newIntent(Context packageContext) {
@@ -313,6 +333,7 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.exit) {
             if (AVUser.getCurrentUser() != null){
                 AVUser.logOut();
+                updateHeaderView();
             }else {
                 Toast.makeText(MainActivity.this, "请登录！", Toast.LENGTH_SHORT).show();
             }

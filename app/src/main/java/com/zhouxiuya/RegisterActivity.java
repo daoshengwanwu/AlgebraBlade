@@ -2,6 +2,7 @@ package com.zhouxiuya;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -105,7 +106,8 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             }
         });
     }
-    //验证用户输入的验证码是否有效
+
+    //判断验证码是否正确
     private boolean isCodeVailid(){
         AVSMS.verifySMSCodeInBackground(et_code.getText().toString(), et_phone.getText().toString(), new AVMobilePhoneVerifyCallback() {
             @Override
@@ -133,7 +135,6 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         String password = et_pwd.getText().toString();
         String cpassword = et_conpwd.getText().toString();
         String phone = et_phone.getText().toString();
-        String code = et_code.getText().toString();
 
         if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
             tv_pwd.setText(getString(R.string.error_invalid_password));
@@ -142,18 +143,21 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         if (TextUtils.isEmpty(username)) {
             tv_username.setText(getString(R.string.error_field_required));
         }
-//        if (isusernameValid(username)) {
-//            tv_username.setText("existed");
-//        }
+
         if (!cpassword.equals(password)) {
             tv_conpwd.setText("error");
         }
         if (!TextUtils.isEmpty(phone) && !isMoiblephoneValid(phone)) {
             tv_phone.setText(getString(R.string.error_invalid_phone));
         }
-//        if(!isCodeVailid()){
-//            Toast.makeText(RegisterActivity.this,"验证码错误!", Toast.LENGTH_SHORT).show();
-//        }
+        //验证码不正确
+        if(!isCodeVailid()){
+
+        }
+        if(isusernameValid(username)){
+            tv_username.setText("username exists");
+        }
+
         else {
             AVUser user = new AVUser();// 新建 AVUser 对象实例
             user.setUsername(username);// 设置用户名
@@ -183,16 +187,18 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
     private boolean isusernameValid(String username) {
         //用户名是否存在
-        AVQuery<AVObject> queryName = new AVQuery<>("User");
+        AVQuery<AVUser> userQuery = new AVQuery<>("_User");
         //用户名存在
-        queryName.whereEqualTo("username", username);
-        queryName.countInBackground(new CountCallback() {
+        userQuery.whereEqualTo("username", username);
+        userQuery.countInBackground(new CountCallback() {
             @Override
             public void done(int i, AVException e) {
-                if (i==0) {
-                    isExit = false;
-                } else {
+                if (e == null) {
+                    // 查询成功,存在
                     isExit = true;
+                } else {
+                    // 查询失败，不存在
+                    isExit = false;
                 }
             }
         });

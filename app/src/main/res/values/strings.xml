@@ -29,4 +29,7 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
+    <!--确认密码与密码不同-->
+    <string name="mistake_password">The confirmation password is not identical</string>
+
 </resources>

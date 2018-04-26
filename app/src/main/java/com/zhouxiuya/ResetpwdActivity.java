@@ -2,16 +2,24 @@ package com.zhouxiuya;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.avos.avoscloud.AVAnalytics;
 import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVUser;
+import com.avos.avoscloud.GetCallback;
+import com.avos.avoscloud.LogInCallback;
+import com.avos.avoscloud.UpdatePasswordCallback;
 import com.graduation_project.android.algebrablade.R;
 
 import javax.security.auth.callback.PasswordCallback;
@@ -60,16 +68,34 @@ public class ResetpwdActivity extends AppCompatActivity implements View.OnClickL
         tv_newpwd.setText("");
         String oldpwd = et_oldpwd.getText().toString();
         String newpwd = et_newpwd.getText().toString();
-        AVUser user = AVUser.getCurrentUser();
-        if(oldpwd!=newpwd){
-            tv_newpwd.setText("The confirmation password is not identical");
+        final AVUser user = AVUser.getCurrentUser();
+        String username = user.getUsername();
+
+        //新密码与原密码相同
+        if(oldpwd == newpwd){
+            tv_newpwd.setText("新密码与原密码相同");
+        }
+        //新密码长度不够
+        if (!TextUtils.isEmpty(newpwd) && !isPasswordValid(newpwd)) {
+            tv_newpwd.setText(R.string.error_invalid_password);
+        }
+        else{
+            user.updatePasswordInBackground(oldpwd, newpwd, new UpdatePasswordCallback() {
+                @Override
+                public void done(AVException e) {
+                    if (e == null) {
+                        ResetpwdActivity.this.finish();
+                    } else {
+                        tv_oldpwd.setText("Incorrect password");
+                    }
+                }
+            });
         }
 
-        try {
-            user.updatePassword(oldpwd,newpwd);
-        } catch (AVException e) {
-            e.printStackTrace();
-        }
+    }
+    private boolean isPasswordValid(String password) {
+        //密码大于6位
+        return password.length() > 5;
     }
 
     @Override
