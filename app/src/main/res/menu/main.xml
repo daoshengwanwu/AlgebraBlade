@@ -8,7 +8,7 @@
         app:showAsAction="withText|ifRoom" />
 
     <item android:id="@+id/action_kuo"
-        android:icon="@mipmap/pic_fx"
+        android:icon="@drawable/ic_fx"
         android:orderInCategory="100"
         android:title="拟合"
         app:showAsAction="withText|ifRoom" />

@@ -24,6 +24,7 @@
             android:name="com.zhouxiuya.MainActivity"
             android:label="@string/app_name"
             android:theme="@style/MainTheme">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -76,6 +77,10 @@
         <activity android:name="com.zhouxiuya.CollectionActivity"
             android:label="Collection"
             android:parentActivityName="com.zhouxiuya.MainActivity" >
+
+        </activity>
+
+        <activity android:name=".LauncherActivity" >
 
         </activity>
     </application>
