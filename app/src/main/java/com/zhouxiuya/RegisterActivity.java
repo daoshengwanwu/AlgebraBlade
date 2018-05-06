@@ -21,10 +21,14 @@ import com.avos.avoscloud.AVSMS;
 import com.avos.avoscloud.AVSMSOption;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.CountCallback;
+import com.avos.avoscloud.FindCallback;
 import com.avos.avoscloud.LogUtil;
 import com.avos.avoscloud.RequestMobileCodeCallback;
+import com.avos.avoscloud.SaveCallback;
 import com.avos.avoscloud.SignUpCallback;
 import com.graduation_project.android.algebrablade.R;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -131,11 +135,14 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         tv_conpwd.setText("");
         tv_phone.setText("");
 
-        String username = et_username.getText().toString();
+        final String username = et_username.getText().toString();
         String password = et_pwd.getText().toString();
         String cpassword = et_conpwd.getText().toString();
-        String phone = et_phone.getText().toString();
+        final String phone = et_phone.getText().toString();
 
+//        if(isusernameExit(username)){
+//            tv_username.setText("username is existed");
+//        }
         if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
             tv_pwd.setText(getString(R.string.error_invalid_password));
         }
@@ -154,9 +161,6 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         if(!isCodeVailid()){
 
         }
-        if(isusernameValid(username)){
-            tv_username.setText("username exists");
-        }
 
         else {
             AVUser user = new AVUser();// 新建 AVUser 对象实例
@@ -168,6 +172,19 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 public void done(AVException e) {
                     if (e == null) {
                         // 注册成功，把用户对象赋值给当前用户 AVUser.getCurrentUser()
+                        AVObject muser = new AVObject("Users");
+                        muser.put("username", username);
+                        muser.put("tel", phone);
+                        muser.saveInBackground(new SaveCallback() {
+                            @Override
+                            public void done(AVException e) {
+                                if (e == null) {
+                                    // 存储成功
+                                } else {
+                                    // 失败的话，请检查网络环境以及 SDK 配置是否正确
+                                }
+                            }
+                        });
                         RegisterActivity.this.finish();
                         startActivity(MainActivity.newIntent(RegisterActivity.this));
                         //finish LoginActivity
@@ -181,30 +198,27 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
     }
 
+    private boolean isusernameExit(String username) {
+        AVQuery<AVObject> queryuser = new AVQuery<>("Users");
+        queryuser.whereEqualTo("username",username);
+        queryuser.findInBackground(new FindCallback<AVObject>() {
+            @Override
+            public void done(List<AVObject> list, AVException e) {
+                if(list.size()==0){
+                    isExit = false;
+                }
+                else
+                    isExit = true;
+            }
+        });
+        return isExit;
+    }
+
     private boolean isMoiblephoneValid(String phone) {
         return phone.length() == 11;
     }
 
-    private boolean isusernameValid(String username) {
-        //用户名是否存在
-        AVQuery<AVUser> userQuery = new AVQuery<>("_User");
-        //用户名存在
-        userQuery.whereEqualTo("username", username);
-        userQuery.countInBackground(new CountCallback() {
-            @Override
-            public void done(int i, AVException e) {
-                if (e == null) {
-                    // 查询成功,存在
-                    isExit = true;
-                } else {
-                    // 查询失败，不存在
-                    isExit = false;
-                }
-            }
-        });
 
-        return isExit;
-    }
 
     private boolean isPasswordValid(String password) {
         //密码大于6位

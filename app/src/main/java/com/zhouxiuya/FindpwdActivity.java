@@ -57,7 +57,7 @@ public class FindpwdActivity extends AppCompatActivity implements View.OnClickLi
     @BindView(R.id.btn_code)
     Button btn_code;
     //用户名是否存在
-    private Boolean isExit = true;
+    private Boolean isnotExit = true;
     //验证码是否有效
     private Boolean isCode = false;
 
@@ -107,26 +107,38 @@ public class FindpwdActivity extends AppCompatActivity implements View.OnClickLi
         });
     }
 
-    private boolean isusernameExit(String username) {
+    private boolean isusernamenotExit(String username) {
 
-        //用户名是否存在
-        AVQuery<AVUser> userQuery = AVUser.getQuery(AVUser.class);
-
-        //用户名存在
-        userQuery.whereEqualTo("username", et_username.getText());
-        userQuery.findInBackground(new FindCallback<AVUser>() {
+//        //用户名是否存在
+//        AVQuery<AVUser> userQuery = AVUser.getQuery(AVUser.class);
+//
+//        //用户名存在
+//        userQuery.whereEqualTo("username", et_username.getText());
+//        userQuery.findInBackground(new FindCallback<AVUser>() {
+//            @Override
+//            public void done(List<AVUser> list, AVException e) {
+//                if(e==null){//即使查不到数据，它返回的是[]这样的符号，所以用这样的符号进行判断
+//                   list.size();
+//
+//                }else{
+//                    e.printStackTrace();
+//                }
+//            }
+//        });
+        AVQuery<AVObject> queryuser = new AVQuery<>("Users");
+        queryuser.whereEqualTo("username",username);
+        queryuser.findInBackground(new FindCallback<AVObject>() {
             @Override
-            public void done(List<AVUser> list, AVException e) {
-                if(e==null){//即使查不到数据，它返回的是[]这样的符号，所以用这样的符号进行判断
-                   list.size();
-
-                }else{
-                    e.printStackTrace();
+            public void done(List<AVObject> list, AVException e) {
+                if(list.size()!=0){
+                    isnotExit = false;
                 }
+                else
+                    isnotExit = true;
             }
         });
 
-        return isExit;
+        return isnotExit;
     }
     //设置密码
     private void attemptResetpwd() {
@@ -141,7 +153,7 @@ public class FindpwdActivity extends AppCompatActivity implements View.OnClickLi
         if (!TextUtils.isEmpty(username)) {
             tv_pwd.setText(getString(R.string.error_field_required));
         }
-        if(!isusernameExit(username)){
+        if(isusernamenotExit(username)){
             tv_username.setText("username does not exit");
         }
         if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
