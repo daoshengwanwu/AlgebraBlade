@@ -7,21 +7,16 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
-import android.text.Layout;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 
 import com.graduation_project.android.algebrablade.R;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 
 public class CustomKeyboard extends FrameLayout {
@@ -37,7 +32,6 @@ public class CustomKeyboard extends FrameLayout {
     private ViewPager mViewPager;
     private ImageView mFirstDot;
     private ImageView mSecondDot;
-    private LinearLayout mRootView;
 
     public CustomKeyboard(Context context, AttributeSet attrs) {
         super(context, attrs);
