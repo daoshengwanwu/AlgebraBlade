@@ -17,6 +17,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Calendar;
+import java.util.TimeZone;
 
 import static android.content.ContentValues.TAG;
 
@@ -32,28 +34,57 @@ public class FileUtil {
 
     public static final String COLLECTION_DIRECTORY =
             APPLICATION_STORAGE_DIRECTORY + "/Collections";
+    public static Calendar cal;
+    public static String year;
+    public static String month;
+    public static String day;
+    public static String hour;
+    public static String minute;
+    public static String second;
+    public static String time;
 
+    public static String getTime(){
+        cal = Calendar.getInstance();
+        cal.setTimeZone(TimeZone.getTimeZone("GMT+8:00"));
 
+        year = String.valueOf(cal.get(Calendar.YEAR));
+        month = String.valueOf(cal.get(Calendar.MONTH)+1);
+        day = String.valueOf(cal.get(Calendar.DATE));
+        if (cal.get(Calendar.AM_PM) == 0)
+            hour = String.valueOf(cal.get(Calendar.HOUR));
+        else
+            hour = String.valueOf(cal.get(Calendar.HOUR)+12);
+        minute = String.valueOf(cal.get(Calendar.MINUTE));
+        second = String.valueOf(cal.get(Calendar.SECOND));
+        time = year + "-" + month + "-" + day + " " + hour + ":" + minute + ":" + second;
+        return time;
+    }
     //保存图片
     public static void saveScreenshotToCloud(final Context context, Bitmap bitmap){
         byte[] bytes = bitmap2ByteArray(bitmap);
 
-        final AVObject user_file = new AVObject("User_File");
-        user_file.put("filename",new AVFile("pic", bytes));
-        user_file.put("user", AVUser.getCurrentUser());
-        user_file.saveInBackground(new SaveCallback() {
-            @Override
-            public void done(AVException e) {
-                if (e==null){
-                    Log.d(TAG,user_file.getObjectId());//返回一个唯一的 Url 地址
-                    Toast.makeText(context, "上传成功", Toast.LENGTH_SHORT).show();
-                }else {
-                    Toast.makeText(context, "上传失败", Toast.LENGTH_SHORT).show();
+        if(AVUser.getCurrentUser()!=null){
+
+            final AVObject user_file = new AVObject("User_File");
+            user_file.put("filename",new AVFile(getTime(), bytes));
+            user_file.put("user", AVUser.getCurrentUser());
+            user_file.saveInBackground(new SaveCallback() {
+                @Override
+                public void done(AVException e) {
+                    if (e==null){
+                        Log.d(TAG,user_file.getObjectId());//返回一个唯一的 Url 地址
+                        Toast.makeText(context, "上传成功", Toast.LENGTH_SHORT).show();
+                    }else {
+                        Toast.makeText(context, "上传失败", Toast.LENGTH_SHORT).show();
+                    }
                 }
-            }
 
 
-        });
+            });
+        }else {
+            Toast.makeText(context, "请先登录！", Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     public static void saveScreenshotToLocal(Context context, Bitmap bitmap) {

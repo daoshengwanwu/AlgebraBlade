@@ -66,6 +66,7 @@ public class CollectionActivity extends AppCompatActivity {
         AVUser user = AVUser.getCurrentUser();
         AVQuery<AVObject> query = new AVQuery<>("User_File");
         query.whereEqualTo("user",user);
+        query.addDescendingOrder("createdAt");
         query.findInBackground(new FindCallback<AVObject>() {
             @Override
             public void done(List<AVObject> list, AVException e) {
