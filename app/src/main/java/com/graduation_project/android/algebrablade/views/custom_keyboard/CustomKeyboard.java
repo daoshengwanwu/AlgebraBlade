@@ -5,18 +5,26 @@ import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
+import android.text.Layout;
 import android.util.AttributeSet;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.graduation_project.android.algebrablade.R;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
-public class CustomKeyboard extends ViewPager {
+
+public class CustomKeyboard extends FrameLayout {
     private int mKeyboardType = -1;
     private boolean mIsInit = false;
 
@@ -26,8 +34,21 @@ public class CustomKeyboard extends ViewPager {
 
     private List<Fragment> mKeyboardFragments = new ArrayList<>();
 
+    private ViewPager mViewPager;
+    private ImageView mFirstDot;
+    private ImageView mSecondDot;
+    private LinearLayout mRootView;
+
     public CustomKeyboard(Context context, AttributeSet attrs) {
         super(context, attrs);
+
+        LayoutInflater.from(context).inflate(R.layout.layout_custom_keyboard, this);
+
+        mViewPager = findViewById(R.id.view_pager);
+        mFirstDot = findViewById(R.id.dot_first);
+        mSecondDot = findViewById(R.id.dot_second);
+        mViewPager.setBackgroundColor(
+                ContextCompat.getColor(context, R.color.color_keyboard_light));
     }
 
     public void init(FragmentManager fragmentManager, int keyboardType) {
@@ -42,12 +63,39 @@ public class CustomKeyboard extends ViewPager {
 
         mKeyboardType = keyboardType;
         mFragmentManager = fragmentManager;
-        setAdapter(new KeyboardPagerAdapter(mFragmentManager));
+        mViewPager.setAdapter(new KeyboardPagerAdapter(mFragmentManager));
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                switch (position) {
+                    case 0: {
+                        mFirstDot.setImageResource(R.drawable.dot_focused);
+                        mSecondDot.setImageResource(R.drawable.dot_normal);
+                    } break;
+
+                    case 1: {
+                        mFirstDot.setImageResource(R.drawable.dot_normal);
+                        mSecondDot.setImageResource(R.drawable.dot_focused);
+                    } break;
+
+                    default: break;
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
 
         mIsInit = true;
 
         CustomInputMethodManager.registerKeyboard(this);
-
     }
 
     public void setRelateEditText(CustomEditText editText) {
