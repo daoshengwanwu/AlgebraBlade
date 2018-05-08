@@ -2,6 +2,7 @@ package com.graduation_project.android.algebrablade.views;
 
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Path;
@@ -247,6 +248,15 @@ public class CanvasView extends View {
                     getCurrentDomainStart(), getCurrentDomainEnd(), mCurves);
         }
         invalidate();
+    }
+
+    public Bitmap screenshot() {
+        setDrawingCacheEnabled(true);
+        buildDrawingCache();
+        Bitmap bitmap = Bitmap.createBitmap(getDrawingCache());
+        setDrawingCacheEnabled(false);
+
+        return bitmap;
     }
 
     @Override
