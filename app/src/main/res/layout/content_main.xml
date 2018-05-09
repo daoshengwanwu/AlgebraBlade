@@ -15,25 +15,10 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:descendantFocusability="afterDescendants"/>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="top"
-        android:orientation="horizontal"
-        android:gravity="center">
-        <ImageView
-            android:id="@+id/dot_first"
-            style="@style/dotposition_style"
-            android:background="@drawable/dot_normal" />
-        <ImageView
-            android:id="@+id/dot_second"
-            style="@style/dotposition_style"
-            android:background="@drawable/dot_normal" />
-    </LinearLayout>
+
     <com.graduation_project.android.algebrablade.views.custom_keyboard.CustomKeyboard
         android:id="@+id/custom_keyboard"
         android:layout_width="match_parent"
-        android:layout_height="270dp"
-        android:background="#efefef"/>
+        android:layout_height="302dp" />
 
 </LinearLayout>

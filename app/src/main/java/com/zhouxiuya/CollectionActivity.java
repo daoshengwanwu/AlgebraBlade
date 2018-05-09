@@ -4,11 +4,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Toast;
 
 import com.avos.avoscloud.AVAnalytics;
 import com.avos.avoscloud.AVException;
@@ -18,8 +21,10 @@ import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.FindCallback;
 import com.graduation_project.android.algebrablade.R;
 import com.zhouxiuya.adapter.MainRecyclerAdapter;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import butterknife.ButterKnife;
 
 public class CollectionActivity extends AppCompatActivity {
@@ -34,26 +39,21 @@ public class CollectionActivity extends AppCompatActivity {
     }
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_collection);
         ButterKnife.bind(this);
 
-        mRecyclerView = (RecyclerView) findViewById(R.id.list_collection);
-        mRecyclerView.setHasFixedSize(true);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(CollectionActivity.this));
-        mRecyclerAdapter = new MainRecyclerAdapter(mList, CollectionActivity.this);
-        mRecyclerView.setAdapter(mRecyclerAdapter);
-
+        initData();
 
     }
+
     @Override
     protected void onPostResume() {
         super.onPostResume();
         AVAnalytics.onResume(this);
-        initData();
+
     }
 
     @Override
@@ -65,39 +65,83 @@ public class CollectionActivity extends AppCompatActivity {
     private void initData() {
         AVUser user = AVUser.getCurrentUser();
         AVQuery<AVObject> query = new AVQuery<>("User_File");
-        query.whereEqualTo("user",user);
+        query.whereEqualTo("user", user);
+        query.addDescendingOrder("createdAt");
         query.findInBackground(new FindCallback<AVObject>() {
             @Override
             public void done(List<AVObject> list, AVException e) {
-                if(e == null){
+                if (e == null) {
                     mList.addAll(list);
                     mRecyclerAdapter.notifyDataSetChanged();
 
-                }else {
+                } else {
                     e.printStackTrace();
                 }
             }
 
         });
+        mRecyclerView = (RecyclerView) findViewById(R.id.list_collection);
+        //Item的改变不会影响RecyclerView的宽高的时候可以设置setHasFixedSize(true)
+        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setLayoutManager(new GridLayoutManager(CollectionActivity.this, 2));
+        mRecyclerAdapter = new MainRecyclerAdapter(mList, CollectionActivity.this);
+
+        mRecyclerAdapter.setOnItemLongClickListener(new MainRecyclerAdapter.OnItemLongClickListener() {
+            @Override
+            public void onItemLongClick(View view, int position) {
+                showPopMenu(view,position);
+            }
+        });
+        mRecyclerView.setAdapter(mRecyclerAdapter);
+        mRecyclerView.setRecyclerListener(new RecyclerView.RecyclerListener() {
+            @Override
+            public void onViewRecycled(RecyclerView.ViewHolder holder) {
+
+            }
+        });
+
 
     }
 
 
-
-
     @Override
-        public boolean onOptionsItemSelected (MenuItem item){
-            switch (item.getItemId()) {
-                case android.R.id.home: {
-                    finish();
-                }
-                return true;
-
-                default:
-                    break;
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home: {
+                finish();
             }
+            return true;
 
-            return super.onOptionsItemSelected(item);
+            default:
+                break;
         }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    public void showPopMenu(View view,final int pos){
+        PopupMenu popupMenu = new PopupMenu(this,view);
+        popupMenu.getMenuInflater().inflate(R.menu.menu_colllect_item,popupMenu.getMenu());
+        popupMenu.show();
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                mRecyclerAdapter.removeItem(pos);
+                mRecyclerAdapter.notifyDataSetChanged();
+//                mRecyclerAdapter.notifyItemMoved(pos,pos-1);
+//                if (pos != mList.size()) {
+//                    mRecyclerAdapter.notifyItemRangeChanged(pos, mList.size() - pos);
+//                }
+                return false;
+            }
+        });
+
+        popupMenu.setOnDismissListener(new PopupMenu.OnDismissListener() {
+            @Override
+            public void onDismiss(PopupMenu menu) {
+//                Toast.makeText(getApplicationContext(), "关闭PopupMenu", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 
 }

@@ -2,7 +2,9 @@ package com.graduation_project.android.algebrablade.views;
 
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PointF;
@@ -14,6 +16,8 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
+
+import java.util.ArrayList;
 
 
 public class CanvasView extends View {
@@ -49,6 +53,9 @@ public class CanvasView extends View {
     private GestureDetector mGestureDetector;
     private ScaleGestureDetector mScaleGestureDetector;
 
+    private ArrayList<Float> mSelectedPoints = new ArrayList<>();
+    private OnSelectPointsFinishedListener mOnSelectPointsFinishedListener;
+
     private SparseArray<Curve> mCurves = new SparseArray<>();
     private OnDomainChangeListener mOnDomainChangeListener;
 
@@ -59,6 +66,7 @@ public class CanvasView extends View {
 
     private int mCurrentState = State.FREE;
     private boolean mIsScaleMotion = false;
+    private boolean mIsScrolling = false;
 
 
     public CanvasView(Context context, @Nullable AttributeSet attrs) {
@@ -69,21 +77,34 @@ public class CanvasView extends View {
 
             @Override
             public boolean onScroll(MotionEvent motionEvent, MotionEvent motionEvent1, float v, float v1) {
-                float preDomainStart = getCurrentDomainStart();
-                float preDomainEnd = getCurrentDomainEnd();
+                if (mCurrentState == State.FREE) {
+                    float preDomainStart = getCurrentDomainStart();
+                    float preDomainEnd = getCurrentDomainEnd();
 
-                mOriginPoint.x -= v;
-                mOriginPoint.y += v1;
+                    mOriginPoint.x -= v;
+                    mOriginPoint.y += v1;
 
-                if (mOnDomainChangeListener != null) {
-                    mOnDomainChangeListener.onDomainChange(
-                            CanvasView.this,
-                            preDomainStart,
-                            preDomainEnd,
-                            getCurrentDomainStart(),
-                            getCurrentDomainEnd(),
-                            mCurves
-                    );
+                    if (mOnDomainChangeListener != null) {
+                        mOnDomainChangeListener.onDomainChange(
+                                CanvasView.this,
+                                preDomainStart,
+                                preDomainEnd,
+                                getCurrentDomainStart(),
+                                getCurrentDomainEnd(),
+                                mCurves
+                        );
+                    }
+                } else if (mCurrentState == State.GET_POINTS) {
+                    if (!mIsScrolling) {
+                        mSelectedPoints.clear();
+                    }
+
+                    mIsScrolling = true;
+                    PointF logicPoint = motionPoint2LogicPoint(
+                            motionEvent1.getX(0), motionEvent1.getY(0));
+
+                    mSelectedPoints.add(logicPoint.x);
+                    mSelectedPoints.add(logicPoint.y);
                 }
 
                 invalidate();
@@ -199,6 +220,10 @@ public class CanvasView extends View {
         mOnDomainChangeListener = listener;
     }
 
+    public void setOnSelectPointsFinishedListener(OnSelectPointsFinishedListener listener) {
+        mOnSelectPointsFinishedListener = listener;
+    }
+
     public void addIntersection(int key, float x, float y) {
         PointF point = mIntersections.get(key);
         if (point == null) {
@@ -249,10 +274,29 @@ public class CanvasView extends View {
         invalidate();
     }
 
+    public Bitmap screenshot() {
+        setDrawingCacheEnabled(true);
+        buildDrawingCache();
+        Bitmap bitmap = Bitmap.createBitmap(getDrawingCache());
+        setDrawingCacheEnabled(false);
+
+        return bitmap;
+    }
+
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         switch (mCurrentState) {
+            case State.GET_POINTS:
             case State.FREE: {
+                if (event.getPointerCount() > 1 || event.getAction() == MotionEvent.ACTION_UP) {
+                    if (mIsScrolling && mOnSelectPointsFinishedListener != null) {
+                        mOnSelectPointsFinishedListener.
+                                onPointsSelected(this, mSelectedPoints);
+                    }
+
+                    mIsScrolling = false;
+                }
+
                 mScaleGestureDetector.onTouchEvent(event);
                 if (!mIsScaleMotion) {
                     mGestureDetector.onTouchEvent(event);
@@ -299,11 +343,16 @@ public class CanvasView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+
         adjustCanvas(canvas);
         drawCoordinate(canvas);
-        drawCurves(canvas);
-        if (mCurrentState == State.GET_VALUE) {
-            drawIntersections(canvas);
+        if (mCurrentState != State.GET_POINTS) {
+            drawCurves(canvas);
+            if (mCurrentState == State.GET_VALUE) {
+                drawIntersections(canvas);
+            }
+        } else {
+            drawSelectedPoints(canvas);
         }
     }
 
@@ -510,6 +559,28 @@ public class CanvasView extends View {
         }
     }
 
+    private void drawSelectedPoints(Canvas canvas) {
+        int size = mSelectedPoints.size();
+        if (size < 2 || size % 2 != 0) {
+            return;
+        }
+
+        mPaint.reset();
+        mPaint.setStyle(Paint.Style.STROKE);
+        mPaint.setStrokeWidth(CURVE_WIDTH);
+
+        mPath.reset();
+        mPath.rewind();
+        mPath.moveTo(logicXCoordinate2CanvasXCoordinate(mSelectedPoints.get(0)),
+                logicYCoordinate2CanvasYCoordinate(mSelectedPoints.get(1)));
+        for (int j = 2; j < size; j += 2) {
+            mPath.lineTo(logicXCoordinate2CanvasXCoordinate(mSelectedPoints.get(j)),
+                    logicYCoordinate2CanvasYCoordinate(mSelectedPoints.get(j + 1)));
+        }
+        mPaint.setColor(Color.BLUE);
+        canvas.drawPath(mPath, mPaint);
+    }
+
     private int logicXCoordinate2CanvasXCoordinate(double logicXCoordinate) {
         int logicPixelXCoordinate = (int)(logicXCoordinate / mUnitOfLattice * (int)mPixelOfLattice);
         return logicPixelXCoordinate + (int)mOriginPoint.x;
@@ -562,6 +633,7 @@ public class CanvasView extends View {
     public static class State {
         public static final int FREE = 0x00000000;
         public static final int GET_VALUE = 0x00000001;
+        public static final int GET_POINTS = 0x00000002;
     }
 
     public interface OnDomainChangeListener {
@@ -571,5 +643,9 @@ public class CanvasView extends View {
 
     public interface OnPointSelectListener {
         void onPointSelect(CanvasView view, PointF selectLogicPoint, PointF selectRealPoint);
+    }
+
+    public interface OnSelectPointsFinishedListener {
+        void onPointsSelected(CanvasView view, ArrayList<Float> points);
     }
 }

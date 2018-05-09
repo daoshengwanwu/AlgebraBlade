@@ -9,12 +9,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="输入算式"
-        android:background="@null"/>
+        android:background="@null"
+        android:paddingStart="8dp"
+        android:paddingTop="8dp"/>
     <TextView
         android:id="@+id/tv_calcout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="答案"
+        android:paddingEnd="8dp"
         android:textAlignment="textEnd"
         android:textColor="#000000"/>
 </LinearLayout>

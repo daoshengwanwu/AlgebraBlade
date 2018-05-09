@@ -22,6 +22,7 @@ allprojects {
         maven {
             url "http://mvn.leancloud.cn/nexus/content/repositories/public"
         }
+        maven { url "https://jitpack.io" }
     }
 }
 

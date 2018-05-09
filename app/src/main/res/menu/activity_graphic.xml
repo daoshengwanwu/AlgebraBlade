@@ -13,4 +13,19 @@
         android:title="重置"
         android:icon="@drawable/ic_reset"
         app:showAsAction="ifRoom|withText" />
+
+    <item
+        android:id="@+id/fitting"
+        android:title="拟合函数"
+        app:showAsAction="withText" />
+
+    <item
+        android:id="@+id/save_graphic"
+        android:title="截图至本地"
+        app:showAsAction="withText" />
+
+    <item
+        android:id="@+id/save_and_upload_to_cloud"
+        android:title="截图至云端收藏"
+        app:showAsAction="withText" />
 </menu>

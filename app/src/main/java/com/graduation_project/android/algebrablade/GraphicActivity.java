@@ -1,9 +1,15 @@
 package com.graduation_project.android.algebrablade;
 
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.graphics.PointF;
+import android.os.Build;
+import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.SparseArray;
@@ -11,6 +17,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.daoshengwanwu.math_util.calculator.Calculator;
 import com.daoshengwanwu.math_util.calculator.VarAriExp;
@@ -22,7 +29,13 @@ import com.graduation_project.android.algebrablade.model.CurveSourceLab;
 import com.graduation_project.android.algebrablade.model.ResultSource;
 import com.graduation_project.android.algebrablade.views.CanvasView;
 import com.graduation_project.android.algebrablade.views.CanvasView.Curve;
+import com.zhouxiuya.util.FileUtil;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Locale;
 
 import butterknife.BindView;
@@ -30,6 +43,8 @@ import butterknife.ButterKnife;
 
 
 public class GraphicActivity extends AppCompatActivity {
+    private static final int REQUEST_CODE_PERMISSION = 0;
+
     @BindView(R.id.canvas_view)
     CanvasView mCanvasView;
 
@@ -127,6 +142,16 @@ public class GraphicActivity extends AppCompatActivity {
                 mCurValDisTV.setText(displayStr.toString());
             }
         });
+
+        mCanvasView.setOnSelectPointsFinishedListener(
+                new CanvasView.OnSelectPointsFinishedListener() {
+
+            @Override
+            public void onPointsSelected(CanvasView view, ArrayList<Float> points) {
+                //do nothing for now
+                int a = 10;
+            }
+        });
     }
 
     @Override
@@ -158,6 +183,39 @@ public class GraphicActivity extends AppCompatActivity {
                 mCanvasView.reset();
             } break;
 
+            case R.id.save_graphic: {
+                if (Build.VERSION.SDK_INT >= 23) {
+                    if (ContextCompat.checkSelfPermission(this,
+                            Manifest.permission.READ_EXTERNAL_STORAGE) !=
+                            PackageManager.PERMISSION_GRANTED ||
+                            ContextCompat.checkSelfPermission(this,
+                                    Manifest.permission.WRITE_EXTERNAL_STORAGE) !=
+                                    PackageManager.PERMISSION_GRANTED) {
+
+                        requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,
+                                Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CODE_PERMISSION);
+
+                        break;
+                    }
+                }
+
+                FileUtil.saveScreenshotToLocal(this, mCanvasView.screenshot());
+            } break;
+
+            case R.id.save_and_upload_to_cloud: {
+                FileUtil.saveScreenshotToCloud(this, mCanvasView.screenshot());
+            } break;
+
+            case R.id.fitting: {
+                if (mCanvasView.getState() == CanvasView.State.FREE) {
+                    mCanvasView.setState(CanvasView.State.GET_POINTS);
+                    mCanvasView.refresh();
+                } else if (mCanvasView.getState() == CanvasView.State.GET_POINTS) {
+                    mCanvasView.setState(CanvasView.State.FREE);
+                    mCanvasView.refresh();
+                }
+            } break;
+
             case android.R.id.home: {
                 finish();
             } break;
@@ -166,6 +224,31 @@ public class GraphicActivity extends AppCompatActivity {
         }
 
         return true;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        switch (requestCode) {
+            case REQUEST_CODE_PERMISSION: {
+                boolean isGranted = true;
+
+                for (int rst : grantResults) {
+                    if (rst != PackageManager.PERMISSION_GRANTED) {
+                        Toast.makeText(this,
+                                "请允许存储权限，否则无法保存至本地", Toast.LENGTH_SHORT).show();
+                        isGranted = false;
+                    }
+                }
+
+                if (isGranted) {
+                    FileUtil.saveScreenshotToLocal(this, mCanvasView.screenshot());
+                }
+            } break;
+
+            default: break;
+        }
     }
 
     private Curve getCurveFromResultSource(ResultSource resultSource, Curve recycleCurve) {

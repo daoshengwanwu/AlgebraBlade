@@ -9,6 +9,10 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 
+    <!-- 文件写入权限 -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
     <!-- 基础模块 END -->
     <application
         android:name="com.zhouxiuya.MyLeanCloudApp"
@@ -24,7 +28,6 @@
             android:name="com.zhouxiuya.MainActivity"
             android:label="@string/app_name"
             android:theme="@style/MainTheme">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -74,15 +77,12 @@
             android:name="com.zhouxiuya.ResetpwdActivity"
             android:label="Reset password"
             android:parentActivityName="com.zhouxiuya.LoginActivity" />
-        <activity android:name="com.zhouxiuya.CollectionActivity"
+        <activity
+            android:name="com.zhouxiuya.CollectionActivity"
             android:label="Collection"
-            android:parentActivityName="com.zhouxiuya.MainActivity" >
-
-        </activity>
-
-        <activity android:name=".LauncherActivity" >
-
-        </activity>
+            android:parentActivityName="com.zhouxiuya.MainActivity"></activity>
+        <activity android:name=".LauncherActivity"></activity>
+        <activity android:name="com.zhouxiuya.PictureActivity"></activity>
     </application>
 
 </manifest>
