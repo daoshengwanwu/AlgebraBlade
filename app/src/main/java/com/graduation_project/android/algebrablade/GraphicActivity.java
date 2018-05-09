@@ -207,8 +207,13 @@ public class GraphicActivity extends AppCompatActivity {
             } break;
 
             case R.id.fitting: {
-                mCanvasView.setState(CanvasView.State.GET_POINTS);
-                mCanvasView.refresh();
+                if (mCanvasView.getState() == CanvasView.State.FREE) {
+                    mCanvasView.setState(CanvasView.State.GET_POINTS);
+                    mCanvasView.refresh();
+                } else if (mCanvasView.getState() == CanvasView.State.GET_POINTS) {
+                    mCanvasView.setState(CanvasView.State.FREE);
+                    mCanvasView.refresh();
+                }
             } break;
 
             case android.R.id.home: {

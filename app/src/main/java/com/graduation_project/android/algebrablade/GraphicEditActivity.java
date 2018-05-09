@@ -75,7 +75,8 @@ public class GraphicEditActivity extends AppCompatActivity {
         private final int TYPE_ADD_BUTTON = 1;
 
         private SparseArray<CurveSource> mCurveSources = CurveSourceLab.getInstance().getCurveSources();
-        private int mCurrentCurveId = mCurveSources.keyAt(mCurveSources.size() - 1) + 1;
+        private int mCurrentCurveId = mCurveSources.size() > 0 ?
+                mCurveSources.keyAt(mCurveSources.size() - 1) + 1 : 0;
 
 
         @Override
