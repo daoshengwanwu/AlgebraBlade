@@ -35,6 +35,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Locale;
 
 import butterknife.BindView;
@@ -141,6 +142,16 @@ public class GraphicActivity extends AppCompatActivity {
                 mCurValDisTV.setText(displayStr.toString());
             }
         });
+
+        mCanvasView.setOnSelectPointsFinishedListener(
+                new CanvasView.OnSelectPointsFinishedListener() {
+
+            @Override
+            public void onPointsSelected(CanvasView view, ArrayList<Float> points) {
+                //do nothing for now
+                int a = 10;
+            }
+        });
     }
 
     @Override
@@ -193,6 +204,11 @@ public class GraphicActivity extends AppCompatActivity {
 
             case R.id.save_and_upload_to_cloud: {
                 FileUtil.saveScreenshotToCloud(this, mCanvasView.screenshot());
+            } break;
+
+            case R.id.fitting: {
+                mCanvasView.setState(CanvasView.State.GET_POINTS);
+                mCanvasView.refresh();
             } break;
 
             case android.R.id.home: {

@@ -15,6 +15,11 @@
         app:showAsAction="ifRoom|withText" />
 
     <item
+        android:id="@+id/fitting"
+        android:title="拟合函数"
+        app:showAsAction="withText" />
+
+    <item
         android:id="@+id/save_graphic"
         android:title="截图至本地"
         app:showAsAction="withText" />
