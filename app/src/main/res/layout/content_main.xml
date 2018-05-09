@@ -19,6 +19,6 @@
     <com.graduation_project.android.algebrablade.views.custom_keyboard.CustomKeyboard
         android:id="@+id/custom_keyboard"
         android:layout_width="match_parent"
-        android:layout_height="298dp" />
+        android:layout_height="302dp" />
 
 </LinearLayout>
