@@ -10,7 +10,7 @@ import android.graphics.Shader;
 import com.squareup.picasso.Transformation;
 
 /**
- * Created by lenovo on 2018/4/27.
+ * Created by zxy on 2018/4/27.
  */
 
 public class RoundedTransformation implements Transformation {

@@ -52,6 +52,7 @@ public class Calc_ListViewAdapter extends BaseAdapter{
         final CustomEditText calc_in = view.findViewById(R.id.et_calcin);
         final TextView calc_out = view.findViewById(R.id.tv_calcout);
 
+        //Calculation类
         final Calculation data = (Calculation)getItem(i);
         calc_in.setText(data.getCalc_in());
         calc_out.setText(data.getCalc_out());
@@ -68,6 +69,7 @@ public class Calc_ListViewAdapter extends BaseAdapter{
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 data.setCalc_in(charSequence.toString());
                 try {
+                    //计算
                     double result = mCalculator.calculate(charSequence.toString());
                     calc_out.setText(result + "");
                     data.setCalc_out(result + "");

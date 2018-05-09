@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
@@ -41,19 +42,14 @@ public class CollectionActivity extends AppCompatActivity {
         setContentView(R.layout.activity_collection);
         ButterKnife.bind(this);
 
-        mRecyclerView = (RecyclerView) findViewById(R.id.list_collection);
-        mRecyclerView.setHasFixedSize(true);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(CollectionActivity.this));
-        mRecyclerAdapter = new MainRecyclerAdapter(mList, CollectionActivity.this);
-        mRecyclerView.setAdapter(mRecyclerAdapter);
-
+        initData();
 
     }
     @Override
     protected void onPostResume() {
         super.onPostResume();
         AVAnalytics.onResume(this);
-        initData();
+
     }
 
     @Override
@@ -79,6 +75,19 @@ public class CollectionActivity extends AppCompatActivity {
                 }
             }
 
+        });
+        mRecyclerView = (RecyclerView) findViewById(R.id.list_collection);
+        //Item的改变不会影响RecyclerView的宽高的时候可以设置setHasFixedSize(true)
+        mRecyclerView.setHasFixedSize(true);
+//        mRecyclerView.setLayoutManager(new LinearLayoutManager(CollectionActivity.this));
+        mRecyclerView.setLayoutManager(new GridLayoutManager(CollectionActivity.this, 2));
+        mRecyclerAdapter = new MainRecyclerAdapter(mList, CollectionActivity.this);
+        mRecyclerView.setAdapter(mRecyclerAdapter);
+        mRecyclerView.setRecyclerListener(new RecyclerView.RecyclerListener() {
+            @Override
+            public void onViewRecycled(RecyclerView.ViewHolder holder) {
+
+            }
         });
 
     }
