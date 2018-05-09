@@ -16,7 +16,7 @@
         android:id="@+id/img"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-
+        android:transitionName="shared_pic"
         android:src="@drawable/ic_launcher" />
     <TextView
         android:id="@+id/text"
