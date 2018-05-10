@@ -109,8 +109,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     }
 
     public void removeItem(int pos) {
-        mList.remove(pos);
-        notifyItemRemoved(pos);
+
         //删除user_file  _file表里的数据
         final AVFile file = mList.get(pos).getAVFile("filename");
         final AVObject user_file = mList.get(pos);
@@ -132,7 +131,8 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                 }
             }
         });
-
+        mList.remove(pos);
+        notifyItemRemoved(pos);
 
     }
 
