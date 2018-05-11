@@ -23,19 +23,23 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <!-- 为了测试先将这个Activity设置为启动Activity -->
         <activity
             android:name="com.zhouxiuya.MainActivity"
             android:label="@string/app_name"
             android:theme="@style/MainTheme">
 
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".GraphicEditActivity"
             android:parentActivityName="com.zhouxiuya.MainActivity" />
         <activity
             android:name=".GraphicActivity"
-            android:parentActivityName=".LauncherActivity" />
+            android:parentActivityName=".GraphicEditActivity" />
 
         <!-- 实时通信模块、推送（均需要加入以下声明） START -->
         <!-- 实时通信模块、推送都要使用 PushService -->
@@ -77,15 +81,9 @@
             android:name="com.zhouxiuya.CollectionActivity"
             android:label="Collection"
             android:parentActivityName="com.zhouxiuya.MainActivity" />
-        <activity android:name=".LauncherActivity" />
         <activity android:name="com.zhouxiuya.PictureActivity" />
-        <activity android:name=".QuadratureActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+        <activity android:name=".QuadratureActivity"
+            android:parentActivityName="com.zhouxiuya.MainActivity"/>
     </application>
 
 </manifest>

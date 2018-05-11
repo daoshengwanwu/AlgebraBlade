@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import com.avos.avoscloud.AVUser;
 import com.graduation_project.android.algebrablade.GraphicEditActivity;
+import com.graduation_project.android.algebrablade.QuadratureActivity;
 import com.graduation_project.android.algebrablade.R;
 import com.graduation_project.android.algebrablade.views.custom_keyboard.CustomKeyboard;
 import com.graduation_project.android.algebrablade.views.custom_keyboard.KeyboardPage1Fragment;
@@ -144,6 +145,10 @@ public class MainActivity extends AppCompatActivity
             case R.id.action_bai: {
                 startActivity(GraphicEditActivity.newIntent(this));
             }break;
+            case R.id.action_kuo: {
+                Intent intent = new Intent(this, QuadratureActivity.class);
+                startActivity(intent);
+            } break;
             case R.id.action_clear:{
                 calc_adapter.clearListview();
                 calc_adapter.notifyDataSetChanged();

@@ -2,6 +2,7 @@ package com.graduation_project.android.algebrablade;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -50,6 +51,19 @@ public class QuadratureActivity extends AppCompatActivity implements View.OnClic
                 break;
 
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home: {
+                finish();
+            } break;
+
+            default: return super.onOptionsItemSelected(item);
+        }
+
+        return true;
     }
 
     private void getResult(){
