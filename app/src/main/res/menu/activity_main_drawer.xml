@@ -17,9 +17,9 @@
                 android:icon="@drawable/ic_menu_resetpwd"
                 android:title="Reset password" />
             <item
-                android:id="@+id/exit"
-                android:icon="@drawable/ic_menu_exit"
-                android:title="Exit" />
+                android:id="@+id/logout"
+                android:icon="@drawable/ic_menu_logout"
+                android:title="Logout" />
         </menu>
     </item>
 

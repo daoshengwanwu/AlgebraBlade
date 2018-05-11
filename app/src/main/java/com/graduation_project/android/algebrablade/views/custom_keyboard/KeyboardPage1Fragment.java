@@ -65,6 +65,7 @@ public class KeyboardPage1Fragment extends Fragment {
     R.id.e, R.id.mul, R.id.div, R.id.add, R.id.sub,
     R.id.mod, R.id.abs})
     void onKeyClick(Button btn) {
+        //获取与键盘关联的输入框
         EditText relateEditText = CustomInputMethodManager.getCurrentKeyboard().getRelateEditText();
 
         if (relateEditText == null) {

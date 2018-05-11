@@ -55,6 +55,7 @@ public class CanvasView extends View {
 
     private ArrayList<Float> mSelectedPoints = new ArrayList<>();
     private OnSelectPointsFinishedListener mOnSelectPointsFinishedListener;
+    private Curve mFittingCurve;
 
     private SparseArray<Curve> mCurves = new SparseArray<>();
     private OnDomainChangeListener mOnDomainChangeListener;
@@ -97,6 +98,7 @@ public class CanvasView extends View {
                 } else if (mCurrentState == State.GET_POINTS) {
                     if (!mIsScrolling) {
                         mSelectedPoints.clear();
+                        mFittingCurve = null;
                     }
 
                     mIsScrolling = true;
@@ -210,6 +212,10 @@ public class CanvasView extends View {
 
     public void addLine(int key, Curve curve) {
         mCurves.put(key, curve);
+    }
+
+    public void setFittingCurve(Curve curve) {
+        mFittingCurve = curve;
     }
 
     public void clearLines() {
@@ -353,6 +359,7 @@ public class CanvasView extends View {
             }
         } else {
             drawSelectedPoints(canvas);
+            drawCurve(canvas, mFittingCurve);
         }
     }
 
@@ -483,35 +490,34 @@ public class CanvasView extends View {
         mPaint.setStyle(Paint.Style.STROKE);
         mPaint.setStrokeWidth(CURVE_WIDTH);
 
-        Curve curve;
-        int size;
-        int color;
-        float[] points;
         for (int i = 0; i < mCurves.size(); i++) {
-            curve = mCurves.valueAt(i);
-            if (curve == null) {
-                continue;
-            }
-
-            points = curve.points;
-            color = curve.color;
-            size = curve.size;
-
-            if (size < 4 || size % 2 != 0) {
-                continue;
-            }
-
-            mPath.reset();
-            mPath.rewind();
-            mPath.moveTo(logicXCoordinate2CanvasXCoordinate(points[0]),
-                    logicYCoordinate2CanvasYCoordinate(points[1]));
-            for (int j = 2; j < size; j += 2) {
-                mPath.lineTo(logicXCoordinate2CanvasXCoordinate(points[j]),
-                        logicYCoordinate2CanvasYCoordinate(points[j + 1]));
-            }
-            mPaint.setColor(color);
-            canvas.drawPath(mPath, mPaint);
+            drawCurve(canvas, mCurves.valueAt(i));
         }
+    }
+
+    private void drawCurve(Canvas canvas, Curve curve) {
+        if (curve == null) {
+            return;
+        }
+
+        float[] points = curve.points;
+        int color = curve.color;
+        int size = curve.size;
+
+        if (size < 4 || size % 2 != 0) {
+            return;
+        }
+
+        mPath.reset();
+        mPath.rewind();
+        mPath.moveTo(logicXCoordinate2CanvasXCoordinate(points[0]),
+                logicYCoordinate2CanvasYCoordinate(points[1]));
+        for (int j = 2; j < size; j += 2) {
+            mPath.lineTo(logicXCoordinate2CanvasXCoordinate(points[j]),
+                    logicYCoordinate2CanvasYCoordinate(points[j + 1]));
+        }
+        mPaint.setColor(color);
+        canvas.drawPath(mPath, mPaint);
     }
 
     private void drawIntersections(Canvas canvas) {

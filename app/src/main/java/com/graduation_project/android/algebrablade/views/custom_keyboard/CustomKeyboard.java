@@ -22,7 +22,7 @@ import java.util.List;
 public class CustomKeyboard extends FrameLayout {
     private int mKeyboardType = -1;
     private boolean mIsInit = false;
-
+    //保存和键盘相关联的输入框
     private CustomEditText mRelateEditText = null;
 
     private FragmentManager mFragmentManager = null;

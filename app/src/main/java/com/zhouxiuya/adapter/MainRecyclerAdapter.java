@@ -7,9 +7,11 @@ import android.content.Intent;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -34,14 +36,6 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     private Context mContext;
     private List<AVObject> mList;
     Dialog dia;
-    private OnItemLongClickListener mOnItemLongClickListener;
-
-    public void setOnItemLongClickListener(OnItemLongClickListener mOnItemLongClickListener) {
-        this.mOnItemLongClickListener = mOnItemLongClickListener;
-    }
-    public interface OnItemLongClickListener {
-        void onItemLongClick(View view, int position);
-    }
 
     public MainRecyclerAdapter(List<AVObject> list, Context context) {
         this.mContext = context;
@@ -77,10 +71,8 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
         holder.mItem.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
-            //true为不加短按,false为加入短按
             public boolean onLongClick(View view) {
-                int position = holder.getLayoutPosition();
-                mOnItemLongClickListener.onItemLongClick(holder.mItem,position);
+                holder.showPopMenu(view,holder.getLayoutPosition());
                 return true;
             }
         });
@@ -109,8 +101,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     }
 
     public void removeItem(int pos) {
-        mList.remove(pos);
-        notifyItemRemoved(pos);
+
         //删除user_file  _file表里的数据
         final AVFile file = mList.get(pos).getAVFile("filename");
         final AVObject user_file = mList.get(pos);
@@ -132,7 +123,8 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                 }
             }
         });
-
+        mList.remove(pos);
+        notifyItemRemoved(pos);
 
     }
 
@@ -161,19 +153,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                     "www" : mAVObject.getAVFile("filename").getUrl()).
                     transform(new RoundedTransformation(9, 0)).into(mPicture);
 
-            mItem.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    checkLargePicture(mAVObject.getAVFile("filename").getUrl(), mPicture);
-                }
-            });
-            mItem.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View view) {
-
-                    return true;
-                }
-            });
+            checkLargePicture(mAVObject.getAVFile("filename").getUrl(), mPicture);
         }
 
 
@@ -185,6 +165,26 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                     (Activity) mContext, view, "shared_pic");
 
             ActivityCompat.startActivity(mContext, intent, optionsCompat.toBundle());
+        }
+        public void showPopMenu(View view,final int pos){
+            PopupMenu popupMenu = new PopupMenu(mContext,view);
+            popupMenu.getMenuInflater().inflate(R.menu.menu_colllect_item,popupMenu.getMenu());
+            popupMenu.show();
+            popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    removeItem(pos);
+                    notifyDataSetChanged();
+                    return false;
+                }
+            });
+
+            popupMenu.setOnDismissListener(new PopupMenu.OnDismissListener() {
+                @Override
+                public void onDismiss(PopupMenu menu) {
+//                Toast.makeText(getApplicationContext(), "关闭PopupMenu", Toast.LENGTH_SHORT).show();
+                }
+            });
         }
     }
 

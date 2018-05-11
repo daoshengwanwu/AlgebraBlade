@@ -42,7 +42,7 @@ public class CustomEditText extends android.support.v7.widget.AppCompatEditText 
         } catch (IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
         }
-
+        //焦点改变时设置监听
         setOnFocusChangeListener(new OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean b) {

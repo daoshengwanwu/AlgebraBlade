@@ -85,13 +85,6 @@ public class CollectionActivity extends AppCompatActivity {
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new GridLayoutManager(CollectionActivity.this, 2));
         mRecyclerAdapter = new MainRecyclerAdapter(mList, CollectionActivity.this);
-
-        mRecyclerAdapter.setOnItemLongClickListener(new MainRecyclerAdapter.OnItemLongClickListener() {
-            @Override
-            public void onItemLongClick(View view, int position) {
-                showPopMenu(view,position);
-            }
-        });
         mRecyclerView.setAdapter(mRecyclerAdapter);
         mRecyclerView.setRecyclerListener(new RecyclerView.RecyclerListener() {
             @Override
@@ -117,31 +110,6 @@ public class CollectionActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    public void showPopMenu(View view,final int pos){
-        PopupMenu popupMenu = new PopupMenu(this,view);
-        popupMenu.getMenuInflater().inflate(R.menu.menu_colllect_item,popupMenu.getMenu());
-        popupMenu.show();
-        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                mRecyclerAdapter.removeItem(pos);
-                mRecyclerAdapter.notifyDataSetChanged();
-//                mRecyclerAdapter.notifyItemMoved(pos,pos-1);
-//                if (pos != mList.size()) {
-//                    mRecyclerAdapter.notifyItemRangeChanged(pos, mList.size() - pos);
-//                }
-                return false;
-            }
-        });
-
-        popupMenu.setOnDismissListener(new PopupMenu.OnDismissListener() {
-            @Override
-            public void onDismiss(PopupMenu menu) {
-//                Toast.makeText(getApplicationContext(), "关闭PopupMenu", Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 
 }
