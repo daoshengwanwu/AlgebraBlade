@@ -1,4 +1,6 @@
 package com.graduation_project.android.algebrablade.utils;
+import android.util.Log;
+
 import com.daoshengwanwu.math_util.calculator.Calculator;
 import com.daoshengwanwu.math_util.calculator.VarAriExp;
 import com.daoshengwanwu.math_util.calculator.Variable;
@@ -8,6 +10,7 @@ import org.apache.commons.math3.fitting.PolynomialCurveFitter;
 import org.apache.commons.math3.fitting.WeightedObservedPoints;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class LeastSquareMethodFromApache {
 
@@ -31,7 +34,7 @@ public class LeastSquareMethodFromApache {
         }
         str=str.substring(0,str.length()-1);
         //System.out.println(str);
-        return str;
+        return str.toLowerCase();
     }
     /*提供离散点集和阶数*/
     public static String testLeastSquareMethodFromApache(ArrayList<Float> points,int degree ) {
@@ -53,7 +56,7 @@ public class LeastSquareMethodFromApache {
         }
         str=str.substring(0,str.length()-1);
         //System.out.println(str);
-        return str;
+        return str.toLowerCase();
     }
 
     /*提供离散点集和拟合率*/
@@ -73,21 +76,20 @@ public class LeastSquareMethodFromApache {
             double[] coeff = fitter.fit(obs.toList());
             int i=0;
             for (double c : coeff) {
-                str+=c+"*x^"+i+"+";
+                str+=c+" * x^"+i+" + ";
                 i++;
             }
-            str=str.substring(0,str.length()-1);
+            str=str.substring(0,str.length()-2);
             str = str.toLowerCase();
+            Log.d("fitting", "testLeastSquareMethodFromApache: " + str);
             if(probilityMachedDegree(points,str)>probaility){
                 flag=false;
             }else{
                 degree++;
-
            }
-
         }
 
-        return str;
+        return str.toLowerCase();
     }
 
     /*求拟合曲线拟合率*/
@@ -106,7 +108,11 @@ public class LeastSquareMethodFromApache {
 
             x.setCurValue(xi);
             double y = resultGenerator.curValue();
-            if(Math.abs(y-yi)<8){
+            double k = Math.abs(maxY(points) - min(points)) / 10;
+            if (k <= 0.000000001) {
+                k = 0.000000001;
+            }
+            if(Math.abs(y-yi)<k){
                 success++;
             }else{
                 faulse++;
@@ -141,5 +147,33 @@ public class LeastSquareMethodFromApache {
     }
 
 
+    private static float maxY(List<Float> points) {
+        if (points.size() < 2) {
+            return 0;
+        }
 
+        float max = points.get(1);
+        for (int i = 3; i < points.size(); i += 2) {
+            if (points.get(i) > max) {
+                max = points.get(i);
+            }
+        }
+
+        return max;
+    }
+
+    private static float min(List<Float> points) {
+        if (points.size() < 2) {
+            return 0;
+        }
+
+        float min = points.get(1);
+        for (int i = 3; i < points.size(); i += 2) {
+            if (points.get(i) < min) {
+                min = points.get(i);
+            }
+        }
+
+        return min;
+    }
 }
