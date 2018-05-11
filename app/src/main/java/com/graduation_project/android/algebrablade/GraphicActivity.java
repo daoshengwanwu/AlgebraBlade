@@ -57,6 +57,9 @@ public class GraphicActivity extends AppCompatActivity {
     @BindView(R.id.right_value_display_text_view)
     TextView mRightValueDisplayTextView;
 
+    @BindView(R.id.fitting_result_text_view)
+    TextView mFittingTextView;
+
     private TextView mCurValDisTV;
     private Calculator mCalculator = new Calculator();
     private CurveSourceLab mCurveSourceLab = CurveSourceLab.getInstance();
@@ -152,7 +155,7 @@ public class GraphicActivity extends AppCompatActivity {
             @Override
             public void onPointsSelected(CanvasView view, ArrayList<Float> points) {
                 String fittingExp = LeastSquareMethodFromApache.
-                        testLeastSquareMethodFromApache(points, 0.9);
+                        testLeastSquareMethodFromApache(points, 0.99);
 
                 VariableAssistant assistant = new VariableAssistant()
                         .addVariable("x", points.get(0), false,
@@ -166,6 +169,9 @@ public class GraphicActivity extends AppCompatActivity {
 
                 mCanvasView.setFittingCurve(getCurveFromResultSource(rs, null));
                 mCanvasView.refresh();
+
+                mFittingTextView.setVisibility(View.VISIBLE);
+                mFittingTextView.setText("拟合结果：\n y = " + fittingExp);
             }
         });
     }
@@ -229,6 +235,7 @@ public class GraphicActivity extends AppCompatActivity {
                 } else if (mCanvasView.getState() == CanvasView.State.GET_POINTS) {
                     mCanvasView.setState(CanvasView.State.FREE);
                     mCanvasView.refresh();
+                    mFittingTextView.setVisibility(View.GONE);
                 }
             } break;
 

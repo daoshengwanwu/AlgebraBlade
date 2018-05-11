@@ -108,7 +108,7 @@ public class LeastSquareMethodFromApache {
 
             x.setCurValue(xi);
             double y = resultGenerator.curValue();
-            double k = Math.abs(maxY(points) - min(points)) / 10;
+            double k = Math.abs(maxY(points) - min(points)) / 20;
             if (k <= 0.000000001) {
                 k = 0.000000001;
             }
