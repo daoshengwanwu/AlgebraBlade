@@ -5,7 +5,6 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.graphics.PointF;
 import android.os.Build;
 import android.support.annotation.NonNull;
@@ -31,10 +30,6 @@ import com.graduation_project.android.algebrablade.views.CanvasView;
 import com.graduation_project.android.algebrablade.views.CanvasView.Curve;
 import com.zhouxiuya.util.FileUtil;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Locale;
 
