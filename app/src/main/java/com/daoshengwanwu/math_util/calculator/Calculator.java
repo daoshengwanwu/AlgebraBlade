@@ -16,8 +16,41 @@ import com.daoshengwanwu.math_util.calculator.util.Stack;
 public class Calculator {
     private Stack<Operand> mOperandStack = new Stack<>();
     private Stack<CertainOperator> mOperatorStack = new Stack<>();
-    
-    
+
+    public static void main(String[] args) {
+        /*Calculator calculator = new Calculator();
+        String expStr = "x^3";
+        VariableAssistant assistant = new VariableAssistant().addVariable("x", -1, false, 1, false, 0.1);
+        Variable x = assistant.getVariable("x");
+        VarAriExp varAriExp = new VarAriExp(expStr, assistant);
+        ResultGenerator resultGenerator = calculator.calculate(varAriExp);
+
+        ArrayList<Float> points = new ArrayList<>();
+        float start = -100, end = 10000;
+        for (float i = start; i <= end; i++) {
+            points.add(i);
+            x.setCurValue(i);
+            points.add((float)resultGenerator.curValue());
+        }
+
+        System.out.println(points.toString());*/
+        Calculator calculator = new Calculator();
+        String expStr = "x^3";
+        VariableAssistant assistant = new VariableAssistant().addVariable(
+                "x", -1, false, 1, false, 0.1
+        );
+        Variable x = assistant.getVariable("x");
+        ResultGenerator resultGenerator = calculator.calculate(new VarAriExp(expStr, assistant));
+
+        x.setCurValue(10);
+        double y = resultGenerator.curValue();
+
+        System.out.println("x = " + x.curValue() + ", y = " + y);
+
+    }
+
+
+
     public double calculate(String expStr) {
         AriExp ariExp = new AriExp(expStr);
         

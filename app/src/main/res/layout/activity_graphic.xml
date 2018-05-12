@@ -44,4 +44,16 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/guideline"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/fitting_result_text_view"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="#EFFFFFFF"
+        android:textColor="@android:color/black"
+        android:visibility="gone"
+        android:padding="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/canvas_view" />
 </android.support.constraint.ConstraintLayout>

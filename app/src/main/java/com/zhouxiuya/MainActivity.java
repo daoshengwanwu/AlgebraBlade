@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import com.avos.avoscloud.AVUser;
 import com.graduation_project.android.algebrablade.GraphicEditActivity;
+import com.graduation_project.android.algebrablade.QuadratureActivity;
 import com.graduation_project.android.algebrablade.R;
 import com.graduation_project.android.algebrablade.views.custom_keyboard.CustomKeyboard;
 import com.graduation_project.android.algebrablade.views.custom_keyboard.KeyboardPage1Fragment;
@@ -78,6 +79,10 @@ public class MainActivity extends AppCompatActivity
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
     }
 
+    //第一个参数：这个整数requestCode提供给onActivityResult，是以便确认返回的数据是从哪个Activity返回的。
+    //这个requestCode和startActivityForResult中的requestCode相对应。
+    //第二个参数：这整数resultCode是由子Activity通过其setResult()方法返回。
+    //第三个参数：一个Intent对象，带有返回的数据。
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -85,6 +90,7 @@ public class MainActivity extends AppCompatActivity
         updateHeaderView();
     }
 
+    //侧滑菜单选择事件
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
@@ -101,7 +107,7 @@ public class MainActivity extends AppCompatActivity
             }else{
                 Toast.makeText(MainActivity.this, "请登录！", Toast.LENGTH_SHORT).show();
             }
-        } else if (id == R.id.exit) {
+        } else if (id == R.id.logout) {
             if (AVUser.getCurrentUser() != null){
                 AVUser.logOut();
                 updateHeaderView();
@@ -139,6 +145,10 @@ public class MainActivity extends AppCompatActivity
             case R.id.action_bai: {
                 startActivity(GraphicEditActivity.newIntent(this));
             }break;
+            case R.id.action_kuo: {
+                Intent intent = new Intent(this, QuadratureActivity.class);
+                startActivity(intent);
+            } break;
             case R.id.action_clear:{
                 calc_adapter.clearListview();
                 calc_adapter.notifyDataSetChanged();
@@ -154,6 +164,7 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = findViewById(R.id.nav_view);
 
         View headerView = navigationView.getHeaderView(0);
+        //解决登陆以后headerview重复出现
         if (headerView != null) {
             navigationView.removeHeaderView(headerView);
         }
@@ -177,16 +188,20 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    //初始化侧滑菜单
     private void initDrawerlayout() {
+        //标题栏
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        //toolbar与drawer联动
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open,
                 R.string.navigation_drawer_close);
 
         drawer.addDrawerListener(toggle);
+        //箭头变化
         toggle.syncState();
 
         NavigationView navigationView = findViewById(R.id.nav_view);
@@ -194,7 +209,7 @@ public class MainActivity extends AppCompatActivity
 
         updateHeaderView();
     }
-
+    //初始化计算列表
     private void initCalcList() {
         calc_adapter = new Calc_ListViewAdapter(this, cal_clist);
         lv_calc.setAdapter(calc_adapter);
