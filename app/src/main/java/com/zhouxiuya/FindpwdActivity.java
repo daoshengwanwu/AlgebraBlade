@@ -146,10 +146,10 @@ public class FindpwdActivity extends AppCompatActivity implements View.OnClickLi
         tv_pwd.setText("");
         tv_conpwd.setText("");
         tv_phone.setText("");
-        String username = et_username.getText().toString();
-        String password = et_pwd.getText().toString();
-        String cpassword = et_conpwd.getText().toString();
-        String phone = et_phone.getText().toString();
+        final String username = et_username.getText().toString();
+        final String password = et_pwd.getText().toString();
+        final String cpassword = et_conpwd.getText().toString();
+        final String phone = et_phone.getText().toString();
         if (!TextUtils.isEmpty(username)) {
             tv_pwd.setText(getString(R.string.error_field_required));
         }

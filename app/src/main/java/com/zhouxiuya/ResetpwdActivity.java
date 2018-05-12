@@ -66,10 +66,10 @@ public class ResetpwdActivity extends AppCompatActivity implements View.OnClickL
     private void attemptResetpwd() {
         tv_oldpwd.setText("");
         tv_newpwd.setText("");
-        String oldpwd = et_oldpwd.getText().toString();
-        String newpwd = et_newpwd.getText().toString();
+        final String oldpwd = et_oldpwd.getText().toString();
+        final String newpwd = et_newpwd.getText().toString();
         final AVUser user = AVUser.getCurrentUser();
-        String username = user.getUsername();
+        final String username = user.getUsername();
 
         //新密码与原密码相同
         if(oldpwd == newpwd){

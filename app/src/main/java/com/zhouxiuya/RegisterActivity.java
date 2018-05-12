@@ -136,8 +136,8 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         tv_phone.setText("");
 
         final String username = et_username.getText().toString();
-        String password = et_pwd.getText().toString();
-        String cpassword = et_conpwd.getText().toString();
+        final String password = et_pwd.getText().toString();
+        final String cpassword = et_conpwd.getText().toString();
         final String phone = et_phone.getText().toString();
 
 //        if(isusernameExit(username)){

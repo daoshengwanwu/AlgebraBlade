@@ -74,7 +74,7 @@ public class KeyboardPage1Fragment extends Fragment {
 
         int cursorStart = relateEditText.getSelectionStart();
         int cursorEnd = relateEditText.getSelectionEnd();
-        boolean isSel = cursorStart < cursorEnd;
+        boolean isSel = cursorStart < cursorEnd;//当前输入框是否选择了文字
 
         switch (btn.getId()) {
             case R.id.move_left: {

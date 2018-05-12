@@ -124,7 +124,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
             }
         });
         mList.remove(pos);
-        notifyItemRemoved(pos);
+        notifyItemRemoved(pos);//动画效果
 
     }
 
